@@ -1,10 +1,13 @@
 import { MantineProvider } from "@mantine/core";
 import "./App.css";
+import Editor from "./components/Editor";
+import AppHeader from "./components/AppHeader";
 
 function App() {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
-      <p>hello</p>
+    <MantineProvider withNormalizeCSS>
+      <AppHeader />
+      <Editor />
     </MantineProvider>
   );
 }
