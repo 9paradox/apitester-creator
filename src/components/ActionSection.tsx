@@ -64,6 +64,7 @@ function ActionSection() {
         offsetScrollbars
         type="hover"
         mt="lg"
+        scrollbarSize={8}
         sx={(theme) => ({
           backgroundColor:
             theme.colorScheme === "dark"

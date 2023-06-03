@@ -56,6 +56,7 @@ function TestCaseSection() {
         h="calc(100% - 60px)"
         offsetScrollbars
         type="hover"
+        scrollbarSize={8}
         sx={(theme) => ({
           backgroundColor:
             theme.colorScheme === "dark"

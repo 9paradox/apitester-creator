@@ -11,7 +11,7 @@ function StepOptionSection() {
   return (
     <Card shadow="xs" radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
-        <Text fw={500}>TestCase Steps</Text>
+        <Text fw={500}>Step Options</Text>
       </Card.Section>
       <SegmentedControl
         fullWidth
@@ -26,6 +26,7 @@ function StepOptionSection() {
         mt="lg"
         offsetScrollbars
         type="hover"
+        scrollbarSize={8}
         sx={(theme) => ({
           backgroundColor:
             theme.colorScheme === "dark"
