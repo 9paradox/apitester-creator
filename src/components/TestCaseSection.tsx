@@ -1,7 +1,9 @@
 import {
+  Avatar,
   Badge,
   Card,
   Center,
+  Flex,
   Group,
   ScrollArea,
   Stack,
@@ -76,12 +78,14 @@ function TestCaseSection() {
       >
         {!ACTIONS && <NoSteps />}
         {ACTIONS.map((action) => (
-          <StepCard
+          <StepCardItem
             key={action.name}
+            index={ACTIONS.indexOf(action) + 1}
             name={action.name}
             description={action.description}
             type={action.type}
             color={action.color}
+            selected={action.name == "get"}
           />
         ))}
       </ScrollArea>
@@ -90,10 +94,12 @@ function TestCaseSection() {
 }
 
 interface StepCardProps {
+  index: number;
   name: string;
   description: string;
   type: string;
   color: string;
+  selected: boolean;
 }
 
 function StepCard({ name, description, type, color }: StepCardProps) {
@@ -105,10 +111,51 @@ function StepCard({ name, description, type, color }: StepCardProps) {
           {type}
         </Badge>
       </Group>
-
       <Text size="sm" color="dimmed">
         {description}
       </Text>
+    </Card>
+  );
+}
+
+function StepCardItem({
+  name,
+  description,
+  type,
+  color,
+  index,
+  selected,
+}: StepCardProps) {
+  return (
+    <Card
+      shadow="xs"
+      radius="md"
+      m={16}
+      sx={(theme) => ({
+        border: selected ? "2px solid #228be6" : "none",
+      })}
+    >
+      <Flex
+        mih={50}
+        gap="md"
+        justify="flex-start"
+        align="center"
+        direction="row"
+        wrap="wrap"
+      >
+        <Avatar size={48} radius="lg" color="gray.6" m={16}>
+          #{index}
+        </Avatar>
+        <Stack align="flex-start" justify="space-between">
+          <Text fw={500}>{name}</Text>
+          <Badge color={color} variant="light" size="sm">
+            {type}
+          </Badge>
+          <Text size="sm" color="dimmed">
+            {description}
+          </Text>
+        </Stack>
+      </Flex>
     </Card>
   );
 }
