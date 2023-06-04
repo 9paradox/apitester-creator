@@ -1,5 +1,14 @@
-import { Badge, ScrollArea, Card, Group, Input, Text } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import {
+  Badge,
+  ScrollArea,
+  Card,
+  Group,
+  Input,
+  Text,
+  Center,
+  Stack,
+} from "@mantine/core";
+import { IconMoodEmpty, IconSearch } from "@tabler/icons-react";
 
 const ACTIONS = [
   {
@@ -73,15 +82,17 @@ function ActionSection() {
           borderRadius: theme.radius.md,
         })}
       >
-        {ACTIONS.map((action) => (
-          <ActionCard
-            key={action.name}
-            name={action.name}
-            description={action.description}
-            type={action.type}
-            color={action.color}
-          />
-        ))}
+        {!ACTIONS && <NoActions />}
+        {ACTIONS &&
+          ACTIONS.map((action) => (
+            <ActionCard
+              key={action.name}
+              name={action.name}
+              description={action.description}
+              type={action.type}
+              color={action.color}
+            />
+          ))}
       </ScrollArea>
     </Card>
   );
@@ -93,6 +104,7 @@ interface ActionCardProps {
   type: string;
   color: string;
 }
+
 function ActionCard({ name, description, type, color }: ActionCardProps) {
   return (
     <Card shadow="xs" radius="md" m={16}>
@@ -107,6 +119,25 @@ function ActionCard({ name, description, type, color }: ActionCardProps) {
         {description}
       </Text>
     </Card>
+  );
+}
+
+function NoActions() {
+  return (
+    <Center
+      h="calc(100vh - 600px)"
+      sx={(theme) => ({
+        margin: "20px",
+        padding: "20px",
+      })}
+    >
+      <Stack align="center">
+        <IconMoodEmpty color="gray" size={40} />
+        <Text size="sm" color="dimmed" inline mt={7}>
+          No actions found
+        </Text>
+      </Stack>
+    </Center>
   );
 }
 

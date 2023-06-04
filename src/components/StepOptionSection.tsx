@@ -5,7 +5,9 @@ import {
   Stack,
   Input,
   SegmentedControl,
+  Center,
 } from "@mantine/core";
+import { IconClick, IconDragDrop } from "@tabler/icons-react";
 
 function StepOptionSection() {
   return (
@@ -19,6 +21,7 @@ function StepOptionSection() {
         data={[
           { label: "Simple", value: "simple" },
           { label: "Advance", value: "advance" },
+          { label: "Other", value: "other" },
         ]}
       />
       <ScrollArea
@@ -35,6 +38,7 @@ function StepOptionSection() {
           borderRadius: theme.radius.md,
         })}
       >
+        {/* <NoStepSelected /> */}
         <Stack p="md">
           <Input.Wrapper id="input-demo" withAsterisk label="URL">
             <Input id="input-demo" placeholder="url" />
@@ -42,6 +46,25 @@ function StepOptionSection() {
         </Stack>
       </ScrollArea>
     </Card>
+  );
+}
+
+function NoStepSelected() {
+  return (
+    <Center
+      h="calc(100vh - 500px)"
+      sx={(theme) => ({
+        margin: "20px",
+        padding: "20px",
+      })}
+    >
+      <Stack align="center">
+        <IconClick color="gray" size={40} />
+        <Text size="sm" color="dimmed" inline mt={7}>
+          Please select a step to continue
+        </Text>
+      </Stack>
+    </Center>
   );
 }
 

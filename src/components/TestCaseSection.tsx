@@ -1,4 +1,13 @@
-import { Badge, Card, Group, ScrollArea, Text } from "@mantine/core";
+import {
+  Badge,
+  Card,
+  Center,
+  Group,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
+import { IconDragDrop } from "@tabler/icons-react";
 
 const ACTIONS = [
   {
@@ -65,6 +74,7 @@ function TestCaseSection() {
           borderRadius: theme.radius.md,
         })}
       >
+        {!ACTIONS && <NoSteps />}
         {ACTIONS.map((action) => (
           <StepCard
             key={action.name}
@@ -100,6 +110,26 @@ function StepCard({ name, description, type, color }: StepCardProps) {
         {description}
       </Text>
     </Card>
+  );
+}
+
+function NoSteps() {
+  return (
+    <Center
+      h="calc(100vh - 400px)"
+      sx={(theme) => ({
+        border: "1px dashed #ccc",
+        margin: "20px",
+        padding: "20px",
+      })}
+    >
+      <Stack align="center">
+        <IconDragDrop color="gray" size={40} />
+        <Text size="sm" color="dimmed" inline mt={7}>
+          Drag and drop Actions here.
+        </Text>
+      </Stack>
+    </Center>
   );
 }
 
