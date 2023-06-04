@@ -33,7 +33,7 @@ const ACTIONS = [
   {
     name: "pickAndVerify",
     description:
-      "Perform json query to pick data from last step and do a test assert.",
+      "Perform json query to pick data from last step and do a test assert. Perform json query to pick data from last step and do a test assert.",
     type: "verification",
     color: "green",
   },
@@ -141,7 +141,7 @@ function StepCardItem({
         justify="flex-start"
         align="center"
         direction="row"
-        wrap="wrap"
+        wrap="nowrap"
       >
         <Avatar size={48} radius="lg" color="gray.6" m={16}>
           #{index}

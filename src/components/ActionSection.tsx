@@ -110,7 +110,7 @@ function ActionCard({ name, description, type, color }: ActionCardProps) {
     <Card shadow="xs" radius="md" m={16}>
       <Group position="apart" mb="xs">
         <Text>{name}</Text>
-        <Badge color={color} variant="light">
+        <Badge color={color} variant="light" size="sm">
           {type}
         </Badge>
       </Group>
