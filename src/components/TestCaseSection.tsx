@@ -1,15 +1,21 @@
 import {
+  ActionIcon,
   Avatar,
   Badge,
   Card,
   Center,
   Flex,
-  Group,
+  Menu,
   ScrollArea,
   Stack,
   Text,
 } from "@mantine/core";
-import { IconDragDrop } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconDots,
+  IconDragDrop,
+  IconTrash,
+} from "@tabler/icons-react";
 
 const ACTIONS = [
   {
@@ -78,7 +84,7 @@ function TestCaseSection() {
       >
         {!ACTIONS && <NoSteps />}
         {ACTIONS.map((action) => (
-          <StepCardItem
+          <StepCard
             key={action.name}
             index={ACTIONS.indexOf(action) + 1}
             name={action.name}
@@ -101,24 +107,7 @@ interface StepCardProps {
   color: string;
   selected: boolean;
 }
-
-function StepCard({ name, description, type, color }: StepCardProps) {
-  return (
-    <Card shadow="xs" radius="md" m={16}>
-      <Group position="apart" mb="xs">
-        <Text>{name}</Text>
-        <Badge color={color} variant="light">
-          {type}
-        </Badge>
-      </Group>
-      <Text size="sm" color="dimmed">
-        {description}
-      </Text>
-    </Card>
-  );
-}
-
-function StepCardItem({
+function StepCard({
   name,
   description,
   type,
@@ -133,12 +122,13 @@ function StepCardItem({
       m={16}
       sx={(theme) => ({
         border: selected ? "2px solid #228be6" : "none",
+        overflow: "visible",
       })}
     >
       <Flex
         mih={50}
         gap="md"
-        justify="flex-start"
+        justify="space-between"
         align="center"
         direction="row"
         wrap="nowrap"
@@ -146,17 +136,43 @@ function StepCardItem({
         <Avatar size={48} radius="lg" color="gray.6" m={16}>
           #{index}
         </Avatar>
-        <Stack align="flex-start" justify="space-between">
+        <Stack
+          align="flex-start"
+          justify="flex-start"
+          spacing="sm"
+          maw="70%"
+          style={{ marginRight: "auto" }}
+        >
           <Text fw={500}>{name}</Text>
-          <Badge color={color} variant="light" size="sm">
+          <Badge color={color} variant="light" size="xs" mb="auto">
             {type}
           </Badge>
-          <Text size="sm" color="dimmed">
+          <Text fz="xs" color="dimmed">
             {description}
           </Text>
         </Stack>
+        <StepMenu />
       </Flex>
     </Card>
+  );
+}
+
+function StepMenu() {
+  return (
+    <Menu shadow="md" width={200}>
+      <Menu.Target>
+        <ActionIcon>
+          <IconDots size="1.125rem" />
+        </ActionIcon>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item icon={<IconCopy size={14} />}>Duplicate</Menu.Item>
+        <Menu.Item color="red" icon={<IconTrash size={14} />}>
+          Delete
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 }
 
