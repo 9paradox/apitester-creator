@@ -4,7 +4,7 @@ const useStyles = createStyles((theme) => ({
   scrollArea: {
     backgroundColor:
       theme.colorScheme === "dark"
-        ? theme.colors.dark[6]
+        ? theme.colors.dark[5]
         : theme.colors.gray[0],
     borderRadius: theme.radius.md,
     overflowY: "auto",
@@ -20,7 +20,7 @@ const useStyles = createStyles((theme) => ({
     "&::-webkit-scrollbar-thumb": {
       backgroundColor:
         theme.colorScheme === "dark"
-          ? theme.colors.gray[6]
+          ? theme.colors.dark[4]
           : theme.colors.gray[3],
       borderRadius: "8px",
     },
