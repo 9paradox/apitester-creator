@@ -1,14 +1,16 @@
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import {
   Badge,
-  ScrollArea,
   Card,
   Group,
   Input,
   Text,
   Center,
   Stack,
+  Box,
 } from "@mantine/core";
 import { IconMoodEmpty, IconSearch } from "@tabler/icons-react";
+import useStyles from "../CustomStyles";
 
 const ACTIONS = [
   {
@@ -57,6 +59,7 @@ const ACTIONS = [
 ];
 
 function ActionSection() {
+  const { classes } = useStyles();
   return (
     <Card shadow="xs" radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
@@ -68,57 +71,74 @@ function ActionSection() {
         variant="filled"
         placeholder="search for actions"
       />
-      <ScrollArea
-        h="calc(100% - 120px)"
-        offsetScrollbars
-        type="hover"
-        mt="lg"
-        scrollbarSize={8}
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          borderRadius: theme.radius.md,
-        })}
-      >
-        {!ACTIONS && <NoActions />}
-        {ACTIONS &&
-          ACTIONS.map((action) => (
-            <ActionCard
-              key={action.name}
-              name={action.name}
-              description={action.description}
-              type={action.type}
-              color={action.color}
-            />
-          ))}
-      </ScrollArea>
+      <Droppable droppableId="action-list">
+        {(provided) => (
+          <Box
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            h="calc(100% - 120px)"
+            mt="lg"
+            className={classes.scrollArea}
+          >
+            {!ACTIONS && <NoActions />}
+
+            {ACTIONS &&
+              ACTIONS.map((action) => (
+                <ActionCard
+                  index={ACTIONS.indexOf(action) + 1}
+                  key={action.name}
+                  name={action.name}
+                  description={action.description}
+                  type={action.type}
+                  color={action.color}
+                />
+              ))}
+          </Box>
+        )}
+      </Droppable>
     </Card>
   );
 }
 
 interface ActionCardProps {
+  index: number;
   name: string;
   description: string;
   type: string;
   color: string;
 }
 
-function ActionCard({ name, description, type, color }: ActionCardProps) {
+function ActionCard({
+  name,
+  description,
+  type,
+  color,
+  index,
+}: ActionCardProps) {
   return (
-    <Card shadow="xs" radius="md" m={16}>
-      <Group position="apart" mb="xs">
-        <Text>{name}</Text>
-        <Badge color={color} variant="light" size="sm">
-          {type}
-        </Badge>
-      </Group>
+    <Draggable draggableId={"actions-item-" + name} index={index}>
+      {(provided) => (
+        <Card
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          shadow="xs"
+          radius="md"
+          m={16}
+        >
+          <Group position="apart" mb="xs">
+            <Text>{name}</Text>
+            <Badge color={color} variant="light" size="sm">
+              {type}
+            </Badge>
+          </Group>
 
-      <Text size="sm" color="dimmed">
-        {description}
-      </Text>
-    </Card>
+          <Text size="sm" color="dimmed">
+            {description}
+          </Text>
+        </Card>
+      )}
+    </Draggable>
   );
 }
 

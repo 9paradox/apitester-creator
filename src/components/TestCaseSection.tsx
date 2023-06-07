@@ -2,11 +2,11 @@ import {
   ActionIcon,
   Avatar,
   Badge,
+  Box,
   Card,
   Center,
   Flex,
   Menu,
-  ScrollArea,
   Stack,
   Text,
 } from "@mantine/core";
@@ -16,6 +16,8 @@ import {
   IconDragDrop,
   IconTrash,
 } from "@tabler/icons-react";
+import useStyles from "../CustomStyles";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 
 const ACTIONS = [
   {
@@ -64,37 +66,35 @@ const ACTIONS = [
 ];
 
 function TestCaseSection() {
+  const { classes } = useStyles();
   return (
     <Card shadow="xs" radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Text fw={500}>TestCase Steps</Text>
       </Card.Section>
-      <ScrollArea
-        h="calc(100% - 60px)"
-        offsetScrollbars
-        type="hover"
-        scrollbarSize={8}
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          borderRadius: theme.radius.md,
-        })}
-      >
-        {!ACTIONS && <NoSteps />}
-        {ACTIONS.map((action) => (
-          <StepCard
-            key={action.name}
-            index={ACTIONS.indexOf(action) + 1}
-            name={action.name}
-            description={action.description}
-            type={action.type}
-            color={action.color}
-            selected={action.name == "get"}
-          />
-        ))}
-      </ScrollArea>
+      <Droppable droppableId="steps-list">
+        {(provided) => (
+          <Box
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            h="calc(100% - 60px)"
+            className={classes.scrollArea}
+          >
+            {!ACTIONS && <NoSteps />}
+            {ACTIONS.map((action) => (
+              <StepCard
+                key={action.name}
+                index={ACTIONS.indexOf(action) + 1}
+                name={action.name}
+                description={action.description}
+                type={action.type}
+                color={action.color}
+                selected={action.name == "get"}
+              />
+            ))}
+          </Box>
+        )}
+      </Droppable>
     </Card>
   );
 }
@@ -116,44 +116,51 @@ function StepCard({
   selected,
 }: StepCardProps) {
   return (
-    <Card
-      shadow="xs"
-      radius="md"
-      m={16}
-      sx={(theme) => ({
-        border: selected ? "2px solid #228be6" : "none",
-        overflow: "visible",
-      })}
-    >
-      <Flex
-        mih={50}
-        gap="md"
-        justify="space-between"
-        align="center"
-        direction="row"
-        wrap="nowrap"
-      >
-        <Avatar size={48} radius="lg" color="gray.6" m={16}>
-          #{index}
-        </Avatar>
-        <Stack
-          align="flex-start"
-          justify="flex-start"
-          spacing="sm"
-          maw="70%"
-          style={{ marginRight: "auto" }}
+    <Draggable draggableId={"steps-item-" + name} index={index}>
+      {(provided) => (
+        <Card
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          shadow="xs"
+          radius="md"
+          m={16}
+          sx={(theme) => ({
+            border: selected ? "2px solid #228be6" : "none",
+            overflow: "visible",
+          })}
         >
-          <Text fw={500}>{name}</Text>
-          <Badge color={color} variant="light" size="xs" mb="auto">
-            {type}
-          </Badge>
-          <Text fz="xs" color="dimmed">
-            {description}
-          </Text>
-        </Stack>
-        <StepMenu />
-      </Flex>
-    </Card>
+          <Flex
+            mih={50}
+            gap="md"
+            justify="space-between"
+            align="center"
+            direction="row"
+            wrap="nowrap"
+          >
+            <Avatar size={48} radius="lg" color="gray.6" m={16}>
+              #{index}
+            </Avatar>
+            <Stack
+              align="flex-start"
+              justify="flex-start"
+              spacing="sm"
+              maw="70%"
+              style={{ marginRight: "auto" }}
+            >
+              <Text fw={500}>{name}</Text>
+              <Badge color={color} variant="light" size="xs" mb="auto">
+                {type}
+              </Badge>
+              <Text fz="xs" color="dimmed">
+                {description}
+              </Text>
+            </Stack>
+            <StepMenu />
+          </Flex>
+        </Card>
+      )}
+    </Draggable>
   );
 }
 
