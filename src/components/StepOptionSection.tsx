@@ -7,17 +7,18 @@ import {
   SegmentedControl,
   Center,
 } from "@mantine/core";
-import { IconClick, IconDragDrop } from "@tabler/icons-react";
+import { IconClick } from "@tabler/icons-react";
 
 function StepOptionSection() {
   return (
-    <Card shadow="xs" radius="md" h="calc(100vh - 200px)" p="md">
+    <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Text fw={500}>Step Options</Text>
       </Card.Section>
       <SegmentedControl
         fullWidth
         radius="md"
+        color="gray"
         data={[
           { label: "Simple", value: "simple" },
           { label: "Advance", value: "advance" },

@@ -15,13 +15,13 @@ const useStyles = createStyles((theme) => ({
       backgroundColor:
         theme.colorScheme === "dark"
           ? theme.colors.dark[6]
-          : theme.colors.gray[2],
+          : theme.colors.gray[1],
     },
     "&::-webkit-scrollbar-thumb": {
       backgroundColor:
         theme.colorScheme === "dark"
           ? theme.colors.gray[6]
-          : theme.colors.dark[0],
+          : theme.colors.gray[3],
       borderRadius: "8px",
     },
   },

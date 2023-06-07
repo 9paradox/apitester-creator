@@ -61,7 +61,7 @@ const ACTIONS = [
 function ActionSection() {
   const { classes } = useStyles();
   return (
-    <Card shadow="xs" radius="md" h="calc(100vh - 200px)" p="md">
+    <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Text fw={500}>Actions</Text>
       </Card.Section>
@@ -122,7 +122,8 @@ function ActionCard({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          shadow="xs"
+          shadow="none"
+          withBorder
           radius="md"
           m={16}
         >
