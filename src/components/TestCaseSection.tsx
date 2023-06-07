@@ -153,10 +153,13 @@ function StepCard({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           shadow="none"
+          tabIndex={index}
+          autoFocus={true}
           withBorder
           radius="md"
           m={16}
           onClick={onCardClick}
+          onFocus={onCardClick}
           sx={(theme) => ({
             boxShadow: selected
               ? `inset 0 0 0px 2px ${theme.colors.blue[3]}`

@@ -34,12 +34,11 @@ function StepOptionSection() {
         sx={(theme) => ({
           backgroundColor:
             theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
+              ? theme.colors.dark[5]
               : theme.colors.gray[0],
           borderRadius: theme.radius.md,
         })}
       >
-        {/* <NoStepSelected /> */}
         <Stack p="md">
           <Input.Wrapper id="input-demo" withAsterisk label="URL">
             <Input id="input-demo" placeholder="url" />
