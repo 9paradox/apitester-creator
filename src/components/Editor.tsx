@@ -3,10 +3,57 @@ import ActionSection from "./ActionSection";
 import TestCaseSection from "./TestCaseSection";
 import StepOptionSection from "./StepOptionSection";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { useAtom } from "jotai";
+import { ActionsStore, StepsStore } from "../Store";
+import { DragList, StepItem } from "../Types";
 
 export function Editor() {
+  const [actions] = useAtom(ActionsStore);
+  const [steps, setSteps] = useAtom(StepsStore);
+
   const onDragEnd = ({ source, destination }: DropResult) => {
     console.log(source, destination);
+    if (!destination) return;
+
+    if (destination.droppableId == DragList.actionList) return;
+
+    if (
+      source.droppableId == DragList.actionList &&
+      destination.droppableId == DragList.stepList
+    ) {
+      const action = actions[source.index];
+
+      const newStep: StepItem = {
+        id: action.name + "-" + steps.length + "-" + new Date().getTime(),
+        actionItem: action,
+        action: action.name,
+        selected: false,
+        inputData: undefined,
+      };
+
+      const newSteps = [...steps];
+
+      newSteps.splice(destination.index, 0, newStep);
+
+      setSteps([...newSteps]);
+
+      return;
+    }
+
+    if (
+      source.droppableId == DragList.stepList &&
+      destination.droppableId == DragList.stepList
+    ) {
+      // const newSteps = [...steps];
+      // console.log(newSteps);
+      // moveStep(newSteps, source.index, destination.index);
+      // setSteps([...newSteps]);
+
+      const newSteps = [...steps];
+      const [removed] = newSteps.splice(source.index, 1);
+      newSteps.splice(destination.index, 0, removed);
+      setSteps([...newSteps]);
+    }
   };
 
   return (

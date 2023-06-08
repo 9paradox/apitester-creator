@@ -17,6 +17,7 @@
     "@mantine/hooks": "^6.0.13",
     "@mantine/modals": "^6.0.13",
     "@tabler/icons-react": "^2.21.0",
+    "jotai": "^2.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

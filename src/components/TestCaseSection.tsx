@@ -18,75 +18,24 @@ import {
 } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { useState } from "react";
-
-const ACTIONS = [
-  {
-    name: "get",
-    description: "Perform GET http request.",
-    type: "action",
-    color: "blue",
-    selected: false,
-  },
-  {
-    name: "post",
-    description: "Perform POST http request.",
-    type: "action",
-    color: "blue",
-    selected: false,
-  },
-  {
-    name: "axios",
-    description: "Perform http request based on AxiosRequestConfig.",
-    type: "action",
-    color: "blue",
-    selected: false,
-  },
-  {
-    name: "pickAndVerify",
-    description:
-      "Perform json query to pick data from last step and do a test assert. Perform json query to pick data from last step and do a test assert.",
-    type: "verification",
-    color: "green",
-    selected: false,
-  },
-  {
-    name: "verify",
-    description: "verify expected against actual",
-    type: "verification",
-    color: "green",
-    selected: false,
-  },
-  {
-    name: "pickData",
-    description: "Perform json query to pick data from last step",
-    type: "action",
-    color: "blue",
-    selected: false,
-  },
-  {
-    name: "log",
-    description: "Last steps will be logged to a file",
-    type: "other",
-    color: "gray",
-    selected: false,
-  },
-];
+import { StepsStore } from "../Store";
+import { DragList, StepItem } from "../Types";
+import { useAtom } from "jotai";
 
 function TestCaseSection() {
   const { classes } = useStyles();
-  const [steps, setSteps] = useState(ACTIONS);
+  const [steps, setSteps] = useAtom(StepsStore);
 
-  function selectStep(step: any) {
-    setSteps(
-      ACTIONS.map((s) => {
-        s.selected = false;
-        return s;
-      })
-    );
+  function selectStep(step: StepItem) {
+    const unselectedSteps = steps.map((s) => {
+      s.selected = false;
+      return s;
+    });
+
+    setSteps(unselectedSteps);
 
     const newSteps = steps.map((s) => {
-      if (s.name === step.name) {
+      if (s.id === step.id) {
         s.selected = !s.selected;
       }
       return s;
@@ -99,7 +48,7 @@ function TestCaseSection() {
       <Card.Section p="lg">
         <Text fw={500}>TestCase Steps</Text>
       </Card.Section>
-      <Droppable droppableId="steps-list">
+      <Droppable droppableId={DragList.stepList}>
         {(provided) => (
           <Box
             {...provided.droppableProps}
@@ -107,19 +56,17 @@ function TestCaseSection() {
             h="calc(100% - 60px)"
             className={classes.scrollArea}
           >
-            {!steps && <NoSteps />}
-            {steps.map((step) => (
-              <StepCard
-                key={step.name}
-                index={steps.indexOf(step) + 1}
-                name={step.name}
-                description={step.description}
-                type={step.type}
-                color={step.color}
-                selected={step.selected}
-                onCardClick={() => selectStep(step)}
-              />
-            ))}
+            {steps.length < 1 && <NoSteps />}
+            {steps &&
+              steps.map((step) => (
+                <StepCard
+                  key={step.id}
+                  index={steps.indexOf(step)}
+                  step={step}
+                  onCardClick={() => selectStep(step)}
+                />
+              ))}
+            {provided.placeholder}
           </Box>
         )}
       </Droppable>
@@ -129,24 +76,12 @@ function TestCaseSection() {
 
 interface StepCardProps {
   index: number;
-  name: string;
-  description: string;
-  type: string;
-  color: string;
-  selected: boolean;
+  step: StepItem;
   onCardClick: () => void;
 }
-function StepCard({
-  name,
-  description,
-  type,
-  color,
-  index,
-  selected,
-  onCardClick,
-}: StepCardProps) {
+function StepCard({ index, step, onCardClick }: StepCardProps) {
   return (
-    <Draggable draggableId={"steps-item-" + name} index={index}>
+    <Draggable draggableId={step.id} index={index}>
       {(provided) => (
         <Card
           ref={provided.innerRef}
@@ -161,7 +96,7 @@ function StepCard({
           onClick={onCardClick}
           onFocus={onCardClick}
           sx={(theme) => ({
-            boxShadow: selected
+            boxShadow: step.selected
               ? `inset 0 0 0px 2px ${theme.colors.blue[3]}`
               : "",
             overflow: "visible",
@@ -178,10 +113,10 @@ function StepCard({
             <Avatar
               size={48}
               radius="lg"
-              color={selected ? "blue.6" : "gray.6"}
+              color={step.selected ? "blue.6" : "gray.6"}
               m={16}
             >
-              #{index}
+              #{index + 1}
             </Avatar>
             <Stack
               align="flex-start"
@@ -190,12 +125,17 @@ function StepCard({
               maw="70%"
               style={{ marginRight: "auto" }}
             >
-              <Text fw={500}>{name}</Text>
-              <Badge color={color} variant="light" size="xs" mb="auto">
-                {type}
+              <Text fw={500}>{step.actionItem.name}</Text>
+              <Badge
+                color={step.actionItem.color}
+                variant="light"
+                size="xs"
+                mb="auto"
+              >
+                {step.actionItem.type}
               </Badge>
               <Text fz="xs" color="dimmed">
-                {description}
+                {step.actionItem.description}
               </Text>
             </Stack>
             <StepMenu />
@@ -228,9 +168,12 @@ function StepMenu() {
 function NoSteps() {
   return (
     <Center
-      h="calc(100vh - 400px)"
+      h="calc(100vh - 335px)"
       sx={(theme) => ({
-        border: "1px dashed #ccc",
+        border:
+          theme.colorScheme === "dark"
+            ? `1px dashed ${theme.colors.dark[3]}`
+            : `1px dashed ${theme.colors.gray[4]}`,
         margin: "20px",
         padding: "20px",
       })}

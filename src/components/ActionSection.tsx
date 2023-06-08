@@ -11,55 +11,13 @@ import {
 } from "@mantine/core";
 import { IconMoodEmpty, IconSearch } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
-
-const ACTIONS = [
-  {
-    name: "get",
-    description: "Perform GET http request.",
-    type: "action",
-    color: "blue",
-  },
-  {
-    name: "post",
-    description: "Perform POST http request.",
-    type: "action",
-    color: "blue",
-  },
-  {
-    name: "axios",
-    description: "Perform http request based on AxiosRequestConfig.",
-    type: "action",
-    color: "blue",
-  },
-  {
-    name: "pickAndVerify",
-    description:
-      "Perform json query to pick data from last step and do a test assert.",
-    type: "verification",
-    color: "green",
-  },
-  {
-    name: "verify",
-    description: "verify expected against actual",
-    type: "verification",
-    color: "green",
-  },
-  {
-    name: "pickData",
-    description: "Perform json query to pick data from last step",
-    type: "action",
-    color: "blue",
-  },
-  {
-    name: "log",
-    description: "Last steps will be logged to a file",
-    type: "other",
-    color: "gray",
-  },
-];
+import { ActionsStore } from "../Store";
+import { useAtom } from "jotai";
+import { DragList } from "../Types";
 
 function ActionSection() {
   const { classes } = useStyles();
+  const [actions] = useAtom(ActionsStore);
   return (
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
@@ -71,7 +29,7 @@ function ActionSection() {
         variant="filled"
         placeholder="search for actions"
       />
-      <Droppable droppableId="action-list">
+      <Droppable droppableId={DragList.actionList}>
         {(provided) => (
           <Box
             {...provided.droppableProps}
@@ -80,12 +38,12 @@ function ActionSection() {
             mt="lg"
             className={classes.scrollArea}
           >
-            {!ACTIONS && <NoActions />}
+            {actions.length < 1 && <NoActions />}
 
-            {ACTIONS &&
-              ACTIONS.map((action) => (
+            {actions &&
+              actions.map((action) => (
                 <ActionCard
-                  index={ACTIONS.indexOf(action) + 1}
+                  index={action.index}
                   key={action.name}
                   name={action.name}
                   description={action.description}
@@ -93,6 +51,7 @@ function ActionSection() {
                   color={action.color}
                 />
               ))}
+            {provided.placeholder}
           </Box>
         )}
       </Droppable>
@@ -116,7 +75,7 @@ function ActionCard({
   index,
 }: ActionCardProps) {
   return (
-    <Draggable draggableId={"actions-item-" + name} index={index}>
+    <Draggable draggableId={DragList.actionList + "-" + name} index={index}>
       {(provided) => (
         <Card
           ref={provided.innerRef}
