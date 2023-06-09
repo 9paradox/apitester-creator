@@ -8,14 +8,18 @@ import {
   Center,
 } from "@mantine/core";
 import { IconClick } from "@tabler/icons-react";
+import { useAtom } from "jotai";
+import { SelectedStepStore } from "../Store";
 
 function StepOptionSection() {
+  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
   return (
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Text fw={500}>Step Options</Text>
       </Card.Section>
       <SegmentedControl
+        disabled={!selectedStep}
         fullWidth
         radius="md"
         color="gray"
@@ -39,13 +43,20 @@ function StepOptionSection() {
           borderRadius: theme.radius.md,
         })}
       >
-        <Stack p="md">
-          <Input.Wrapper id="input-demo" withAsterisk label="URL">
-            <Input id="input-demo" placeholder="url" />
-          </Input.Wrapper>
-        </Stack>
+        {selectedStep == null && <NoStepSelected />}
+        {selectedStep != null && <BasicOption />}
       </ScrollArea>
     </Card>
+  );
+}
+
+function BasicOption() {
+  return (
+    <Stack p="md">
+      <Input.Wrapper id="input-demo" withAsterisk label="URL">
+        <Input id="input-demo" placeholder="url" />
+      </Input.Wrapper>
+    </Stack>
   );
 }
 

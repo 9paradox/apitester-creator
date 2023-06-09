@@ -18,13 +18,14 @@ import {
 } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { StepsStore } from "../Store";
+import { SelectedStepStore, StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
 import { useAtom } from "jotai";
 
 function TestCaseSection() {
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
+  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
 
   function selectStep(step: StepItem) {
     const unselectedSteps = steps.map((s) => {
@@ -40,6 +41,7 @@ function TestCaseSection() {
       }
       return s;
     });
+    setSelectedStep(step);
     setSteps(newSteps);
   }
 

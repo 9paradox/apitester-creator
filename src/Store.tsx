@@ -58,3 +58,5 @@ const actions = atom<Action[]>(ACTIONS);
 export const ActionsStore = atom((get) => get(actions));
 
 export const StepsStore = atom<StepItem[]>([]);
+
+export const SelectedStepStore = atom<StepItem | null>(null);
