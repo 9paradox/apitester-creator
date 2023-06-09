@@ -33,7 +33,7 @@ function ActionSection() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <Droppable droppableId={DragList.actionList}>
+      <Droppable droppableId={DragList.actionList} isDropDisabled>
         {(provided) => (
           <Box
             {...provided.droppableProps}
