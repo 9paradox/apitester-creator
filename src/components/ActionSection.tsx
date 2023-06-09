@@ -14,10 +14,12 @@ import useStyles from "../CustomStyles";
 import { ActionsStore } from "../Store";
 import { useAtom } from "jotai";
 import { DragList } from "../Types";
+import { useState } from "react";
 
 function ActionSection() {
   const { classes } = useStyles();
   const [actions] = useAtom(ActionsStore);
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
@@ -28,6 +30,8 @@ function ActionSection() {
         radius="md"
         variant="filled"
         placeholder="search for actions"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       <Droppable droppableId={DragList.actionList}>
         {(provided) => (
@@ -41,16 +45,41 @@ function ActionSection() {
             {actions.length < 1 && <NoActions />}
 
             {actions &&
-              actions.map((action) => (
-                <ActionCard
-                  index={action.index}
-                  key={action.name}
-                  name={action.name}
-                  description={action.description}
-                  type={action.type}
-                  color={action.color}
-                />
-              ))}
+              actions.map((action) => {
+                if (searchTerm.length > 0) {
+                  if (
+                    action.name
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    action.description
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    action.type.toLowerCase().includes(searchTerm.toLowerCase())
+                  ) {
+                    return (
+                      <ActionCard
+                        index={action.index}
+                        key={action.name}
+                        name={action.name}
+                        description={action.description}
+                        type={action.type}
+                        color={action.color}
+                      />
+                    );
+                  }
+                } else if (searchTerm.length < 1) {
+                  return (
+                    <ActionCard
+                      index={action.index}
+                      key={action.name}
+                      name={action.name}
+                      description={action.description}
+                      type={action.type}
+                      color={action.color}
+                    />
+                  );
+                }
+              })}
             {provided.placeholder}
           </Box>
         )}
