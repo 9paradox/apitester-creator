@@ -44,11 +44,6 @@ export function Editor() {
       source.droppableId == DragList.stepList &&
       destination.droppableId == DragList.stepList
     ) {
-      // const newSteps = [...steps];
-      // console.log(newSteps);
-      // moveStep(newSteps, source.index, destination.index);
-      // setSteps([...newSteps]);
-
       const newSteps = [...steps];
       const [removed] = newSteps.splice(source.index, 1);
       newSteps.splice(destination.index, 0, removed);

@@ -42,7 +42,7 @@ function TestCaseSection() {
       return s;
     });
     setSelectedStep(step);
-    setSteps(newSteps);
+    setSteps([...newSteps]);
   }
 
   return (
@@ -90,13 +90,10 @@ function StepCard({ index, step, onCardClick }: StepCardProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           shadow="none"
-          tabIndex={index}
-          autoFocus={true}
           withBorder
           radius="md"
           m={16}
           onClick={onCardClick}
-          onFocus={onCardClick}
           sx={(theme) => ({
             boxShadow: step.selected
               ? `inset 0 0 0px 2px ${theme.colors.blue[3]}`
@@ -140,30 +137,10 @@ function StepCard({ index, step, onCardClick }: StepCardProps) {
                 {step.actionItem.description}
               </Text>
             </Stack>
-            <StepMenu />
           </Flex>
         </Card>
       )}
     </Draggable>
-  );
-}
-
-function StepMenu() {
-  return (
-    <Menu shadow="md" width={200}>
-      <Menu.Target>
-        <ActionIcon>
-          <IconDots size="1.125rem" />
-        </ActionIcon>
-      </Menu.Target>
-
-      <Menu.Dropdown>
-        <Menu.Item icon={<IconCopy size={14} />}>Duplicate</Menu.Item>
-        <Menu.Item color="red" icon={<IconTrash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
   );
 }
 
