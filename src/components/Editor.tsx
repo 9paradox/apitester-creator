@@ -57,7 +57,7 @@ export function Editor() {
           theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f4f9fd",
       })}
     >
-      <Container size="100rem" h="calc(100vh - 60px - 60px)" pt={60}>
+      <Container size="100rem" h="calc(100vh - 60px - 48px)" pt={40}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Grid grow justify="center" gutter="lg">
             <Grid.Col span={1} style={{ minHeight: rem(80) }}>

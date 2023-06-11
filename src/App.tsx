@@ -7,6 +7,7 @@ import "./App.css";
 import Editor from "./components/Editor";
 import AppHeader from "./components/AppHeader";
 import { useState } from "react";
+import AppFooter from "./components/AppFooter";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -24,6 +25,7 @@ function App() {
       >
         <AppHeader />
         <Editor />
+        <AppFooter />
       </MantineProvider>
     </ColorSchemeProvider>
   );
