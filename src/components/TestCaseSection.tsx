@@ -86,12 +86,18 @@ function TestCaseSection() {
         <Text fw={500}>TestCase Steps</Text>
       </Card.Section>
       <Droppable droppableId={DragList.stepList}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <Box
             {...provided.droppableProps}
             ref={provided.innerRef}
             h="calc(100% - 60px)"
             className={classes.scrollArea}
+            sx={(theme) => ({
+              boxShadow: snapshot.isDraggingOver
+                ? "0 0 10px 2px " + theme.colors.blue[6]
+                : "",
+              transition: "box-shadow 0.4s ease",
+            })}
           >
             {steps.length < 1 && <NoSteps />}
             {steps &&
