@@ -32,7 +32,7 @@ export function AppHeader() {
             component="a"
             color="dark"
             size="lg"
-            href="https://github.com/9paradox/apitester"
+            href="https://github.com/9paradox/apitester-creator"
           >
             <IconBrandGithub size={20} />
           </ActionIcon>
