@@ -1,14 +1,21 @@
 import {
+  ActionIcon,
   Avatar,
   Badge,
   Box,
   Card,
   Center,
   Flex,
+  Menu,
   Stack,
   Text,
 } from "@mantine/core";
-import { IconDragDrop } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconDots,
+  IconDragDrop,
+  IconTrash,
+} from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { SelectedStepStore, StepsStore } from "../Store";
@@ -18,7 +25,7 @@ import { useAtom } from "jotai";
 function TestCaseSection() {
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
-  const [, setSelectedStep] = useAtom(SelectedStepStore);
+  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
 
   function selectStep(step: StepItem) {
     const unselectedSteps = steps.map((s) => {
@@ -36,6 +43,41 @@ function TestCaseSection() {
     });
     setSelectedStep(step);
     setSteps([...newSteps]);
+  }
+
+  function duplicateStep(step: StepItem) {
+    const newStep: StepItem = {
+      ...step,
+    };
+
+    newStep.id =
+      step.actionItem.name + "-" + steps.length + "-" + new Date().getTime();
+
+    newStep.selected = false;
+
+    const newSteps = [...steps];
+    newSteps.splice(steps.indexOf(step) + 1, 0, newStep);
+
+    setSteps([...newSteps]);
+  }
+
+  function deleteStep(step: StepItem) {
+    const newSteps = steps.filter((s) => s.id !== step.id);
+    setSteps([...newSteps]);
+    setSelectedStep(null);
+  }
+
+  function handleMenuClick(action: string) {
+    if (selectedStep == null) return;
+
+    switch (action) {
+      case "clone":
+        duplicateStep(selectedStep);
+        break;
+      case "delete":
+        deleteStep(selectedStep);
+        break;
+    }
   }
 
   return (
@@ -59,6 +101,7 @@ function TestCaseSection() {
                   index={steps.indexOf(step)}
                   step={step}
                   onCardClick={() => selectStep(step)}
+                  onMenuItemClick={handleMenuClick}
                 />
               ))}
             {provided.placeholder}
@@ -73,8 +116,14 @@ interface StepCardProps {
   index: number;
   step: StepItem;
   onCardClick: () => void;
+  onMenuItemClick: (action: string) => void;
 }
-function StepCard({ index, step, onCardClick }: StepCardProps) {
+function StepCard({
+  index,
+  step,
+  onCardClick,
+  onMenuItemClick,
+}: StepCardProps) {
   return (
     <Draggable draggableId={step.id} index={index}>
       {(provided) => (
@@ -86,7 +135,15 @@ function StepCard({ index, step, onCardClick }: StepCardProps) {
           withBorder
           radius="md"
           m={16}
-          onClick={onCardClick}
+          onClick={(e) => {
+            if (step.selected) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
+            onCardClick();
+          }}
           sx={(theme) => ({
             boxShadow: step.selected
               ? `inset 0 0 0px 2px ${theme.colors.blue[3]}`
@@ -130,10 +187,50 @@ function StepCard({ index, step, onCardClick }: StepCardProps) {
                 {step.actionItem.description}
               </Text>
             </Stack>
+            <StepMenu onMenuItemClick={onMenuItemClick} />
           </Flex>
         </Card>
       )}
     </Draggable>
+  );
+}
+
+interface StepMenuProps {
+  onMenuItemClick: (action: string) => void;
+}
+function StepMenu({ onMenuItemClick }: StepMenuProps) {
+  return (
+    <Menu shadow="md" width={200}>
+      <Menu.Target>
+        <ActionIcon>
+          <IconDots size="1.125rem" />
+        </ActionIcon>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item
+          icon={<IconCopy size={14} />}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onMenuItemClick("clone");
+          }}
+        >
+          Duplicate
+        </Menu.Item>
+        <Menu.Item
+          color="red"
+          icon={<IconTrash size={14} />}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onMenuItemClick("delete");
+          }}
+        >
+          Delete
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 }
 

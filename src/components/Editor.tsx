@@ -12,7 +12,6 @@ export function Editor() {
   const [steps, setSteps] = useAtom(StepsStore);
 
   const onDragEnd = ({ source, destination }: DropResult) => {
-    console.log(source, destination);
     if (!destination) return;
 
     if (destination.droppableId == DragList.actionList) return;

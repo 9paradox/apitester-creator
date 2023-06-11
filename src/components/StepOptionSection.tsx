@@ -6,85 +6,20 @@ import {
   Input,
   SegmentedControl,
   Center,
-  Button,
   Group,
 } from "@mantine/core";
-import { IconClick, IconCopy, IconTrash } from "@tabler/icons-react";
+import { IconClick } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { SelectedStepStore, StepsStore } from "../Store";
-import { StepItem } from "../Types";
+import { SelectedStepStore } from "../Store";
 
 function StepOptionSection() {
-  const [steps, setSteps] = useAtom(StepsStore);
-  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
+  const [selectedStep] = useAtom(SelectedStepStore);
 
-  function cloneStep(step: StepItem) {
-    const newStep: StepItem = {
-      ...step,
-    };
-
-    newStep.id =
-      step.actionItem.name + "-" + steps.length + "-" + new Date().getTime();
-
-    newStep.selected = false;
-
-    const newSteps = [...steps];
-    newSteps.splice(steps.indexOf(step) + 1, 0, newStep);
-
-    return newSteps;
-  }
-
-  function deleteStep(step: StepItem) {
-    const newSteps = steps.filter((s) => s.id !== step.id);
-    return newSteps;
-  }
-
-  function handleMenuClick(action: string) {
-    if (selectedStep == null) return;
-    switch (action) {
-      case "clone":
-        {
-          const newSteps = cloneStep(selectedStep);
-          console.log(newSteps);
-          setSteps([...newSteps]);
-          console.log(steps);
-        }
-        break;
-      case "delete":
-        {
-          const newSteps = deleteStep(selectedStep);
-          setSteps([...newSteps]);
-          setSelectedStep(null);
-        }
-        break;
-    }
-  }
   return (
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Group position="apart">
           <Text fw={500}>Step Options</Text>
-          {selectedStep != null && (
-            <Button.Group>
-              <Button
-                size="xs"
-                variant="light"
-                leftIcon={<IconCopy size={14} />}
-                onClick={() => handleMenuClick("clone")}
-              >
-                Clone
-              </Button>
-              <Button
-                size="xs"
-                color="red"
-                variant="light"
-                leftIcon={<IconTrash size={14} />}
-                onClick={() => handleMenuClick("delete")}
-              >
-                Delete
-              </Button>
-            </Button.Group>
-          )}
         </Group>
       </Card.Section>
       <SegmentedControl
