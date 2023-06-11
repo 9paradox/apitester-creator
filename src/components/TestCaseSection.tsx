@@ -1,21 +1,14 @@
 import {
-  ActionIcon,
   Avatar,
   Badge,
   Box,
   Card,
   Center,
   Flex,
-  Menu,
   Stack,
   Text,
 } from "@mantine/core";
-import {
-  IconCopy,
-  IconDots,
-  IconDragDrop,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconDragDrop } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { SelectedStepStore, StepsStore } from "../Store";
@@ -25,7 +18,7 @@ import { useAtom } from "jotai";
 function TestCaseSection() {
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
-  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
+  const [, setSelectedStep] = useAtom(SelectedStepStore);
 
   function selectStep(step: StepItem) {
     const unselectedSteps = steps.map((s) => {

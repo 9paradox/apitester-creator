@@ -133,7 +133,7 @@ function NoStepSelected() {
   return (
     <Center
       h="calc(100vh - 500px)"
-      sx={(theme) => ({
+      sx={() => ({
         margin: "20px",
         padding: "20px",
       })}

@@ -135,7 +135,7 @@ function NoActions() {
   return (
     <Center
       h="calc(100vh - 600px)"
-      sx={(theme) => ({
+      sx={() => ({
         margin: "20px",
         padding: "20px",
       })}
