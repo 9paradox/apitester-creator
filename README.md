@@ -5,4 +5,4 @@ Drag and drop apitester testcase creator.
 
 [Open apitester-creator](https://9paradox.com/apitester-creator/)
 
-![Alt text](screenshot.PNG?raw=true "try-jmespath screenshot")
+![Alt text](screenshot.png?raw=true "try-jmespath screenshot")
