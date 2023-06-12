@@ -3,10 +3,13 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Card,
   Center,
   Flex,
+  Group,
   Menu,
+  Modal,
   Stack,
   Text,
 } from "@mantine/core";
@@ -21,8 +24,10 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { SelectedStepStore, StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
 import { useAtom } from "jotai";
+import { useDisclosure } from "@mantine/hooks";
 
 function TestCaseSection() {
+  const [deleteStepModelOpened, setDeleteStepModel] = useDisclosure(false);
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
   const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
@@ -61,10 +66,13 @@ function TestCaseSection() {
     setSteps([...newSteps]);
   }
 
-  function deleteStep(step: StepItem) {
-    const newSteps = steps.filter((s) => s.id !== step.id);
+  function deleteStep() {
+    if (selectedStep == null) return;
+
+    const newSteps = steps.filter((s) => s.id !== selectedStep.id);
     setSteps([...newSteps]);
     setSelectedStep(null);
+    setDeleteStepModel.close();
   }
 
   function handleMenuClick(action: string) {
@@ -75,46 +83,68 @@ function TestCaseSection() {
         duplicateStep(selectedStep);
         break;
       case "delete":
-        deleteStep(selectedStep);
+        setDeleteStepModel.open();
         break;
     }
   }
 
   return (
-    <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
-      <Card.Section p="lg">
-        <Text fw={500}>TestCase Steps</Text>
-      </Card.Section>
-      <Droppable droppableId={DragList.stepList}>
-        {(provided, snapshot) => (
-          <Box
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            h="calc(100% - 60px)"
-            className={classes.scrollArea}
-            sx={(theme) => ({
-              boxShadow: snapshot.isDraggingOver
-                ? "0 0 10px 2px " + theme.colors.blue[6]
-                : "",
-              transition: "box-shadow 0.4s ease",
-            })}
+    <>
+      <Modal
+        opened={deleteStepModelOpened}
+        onClose={setDeleteStepModel.close}
+        title="Delete step"
+      >
+        <Text>Are you sure you want to delete this step?</Text>
+        <Group mt="lg" spacing="xs" position="right">
+          <Button
+            variant="light"
+            leftIcon={<IconTrash size={14} />}
+            color="red"
+            onClick={() => deleteStep()}
           >
-            {steps.length < 1 && <NoSteps />}
-            {steps &&
-              steps.map((step) => (
-                <StepCard
-                  key={step.id}
-                  index={steps.indexOf(step)}
-                  step={step}
-                  onCardClick={() => selectStep(step)}
-                  onMenuItemClick={handleMenuClick}
-                />
-              ))}
-            {provided.placeholder}
-          </Box>
-        )}
-      </Droppable>
-    </Card>
+            Delete
+          </Button>
+          <Button variant="light" onClick={() => setDeleteStepModel.close()}>
+            Cancel
+          </Button>
+        </Group>
+      </Modal>
+      <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
+        <Card.Section p="lg">
+          <Text fw={500}>TestCase Steps</Text>
+        </Card.Section>
+        <Droppable droppableId={DragList.stepList}>
+          {(provided, snapshot) => (
+            <Box
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              h="calc(100% - 60px)"
+              className={classes.scrollArea}
+              sx={(theme) => ({
+                boxShadow: snapshot.isDraggingOver
+                  ? "0 0 10px 2px " + theme.colors.blue[6]
+                  : "",
+                transition: "box-shadow 0.4s ease",
+              })}
+            >
+              {steps.length < 1 && <NoSteps />}
+              {steps &&
+                steps.map((step) => (
+                  <StepCard
+                    key={step.id}
+                    index={steps.indexOf(step)}
+                    step={step}
+                    onCardClick={() => selectStep(step)}
+                    onMenuItemClick={handleMenuClick}
+                  />
+                ))}
+              {provided.placeholder}
+            </Box>
+          )}
+        </Droppable>
+      </Card>
+    </>
   );
 }
 
