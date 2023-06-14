@@ -30,12 +30,7 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
           }}
         />
         <Textarea placeholder="testcase title" label="Title" withAsterisk />
-        <Button
-          mt="sm"
-          variant="light"
-          leftIcon={<IconDownload size={14} />}
-          color="green"
-        >
+        <Button mt="sm" leftIcon={<IconDownload size={14} />} color="green">
           Download
         </Button>
       </Stack>
