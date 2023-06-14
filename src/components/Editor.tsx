@@ -6,10 +6,13 @@ import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useAtom } from "jotai";
 import { ActionsStore, StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
+import { useDisclosure } from "@mantine/hooks";
+import ExportDrawer from "./ExportDrawer";
 
 export function Editor() {
   const [actions] = useAtom(ActionsStore);
   const [steps, setSteps] = useAtom(StepsStore);
+  const [exportDrawerOpened, setExportDrawerOpened] = useDisclosure(false);
 
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!destination) return;
@@ -57,6 +60,10 @@ export function Editor() {
           theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f4f9fd",
       })}
     >
+      <ExportDrawer
+        opened={exportDrawerOpened}
+        onClose={setExportDrawerOpened.close}
+      />
       <Container size="100rem" h="calc(100vh - 60px - 48px)" pt={40}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Grid grow justify="center" gutter="lg">
@@ -64,7 +71,7 @@ export function Editor() {
               <ActionSection />
             </Grid.Col>
             <Grid.Col span={3} style={{ minHeight: rem(120) }}>
-              <TestCaseSection />
+              <TestCaseSection onExportClick={setExportDrawerOpened.open} />
             </Grid.Col>
             <Grid.Col span={2}>
               <StepOptionSection />
@@ -77,3 +84,8 @@ export function Editor() {
 }
 
 export default Editor;
+
+export interface ExportDrawerProps {
+  opened: boolean;
+  onClose: () => void;
+}

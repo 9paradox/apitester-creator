@@ -17,6 +17,7 @@ import {
   IconCopy,
   IconDots,
   IconDragDrop,
+  IconFileExport,
   IconTrash,
 } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
@@ -26,7 +27,11 @@ import { DragList, StepItem } from "../Types";
 import { useAtom } from "jotai";
 import { useDisclosure } from "@mantine/hooks";
 
-function TestCaseSection() {
+interface TestCaseSectionProps {
+  onExportClick: () => void;
+}
+
+function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
   const [deleteStepModelOpened, setDeleteStepModel] = useDisclosure(false);
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
@@ -112,7 +117,19 @@ function TestCaseSection() {
       </Modal>
       <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
         <Card.Section p="lg">
-          <Text fw={500}>TestCase Steps</Text>
+          <Group position="apart">
+            <Text fw={500}>TestCase Steps</Text>
+            {steps.length > 0 && (
+              <Button
+                variant="light"
+                leftIcon={<IconFileExport size={14} />}
+                color="blue"
+                onClick={onExportClick}
+              >
+                Export
+              </Button>
+            )}
+          </Group>
         </Card.Section>
         <Droppable droppableId={DragList.stepList}>
           {(provided, snapshot) => (
