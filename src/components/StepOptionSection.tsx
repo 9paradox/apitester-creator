@@ -3,23 +3,38 @@ import {
   ScrollArea,
   Text,
   Stack,
-  Input,
   SegmentedControl,
   Center,
   Group,
+  Box,
 } from "@mantine/core";
-import { IconClick } from "@tabler/icons-react";
+import { IconCircleCheck, IconClick } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { SelectedStepStore } from "../Store";
+import { StepsStore } from "../Store";
+import { useState } from "react";
+import DynamicForm from "./DynamicForm";
+import { ActionInputType, Field, StepItem } from "../Types";
 
 function StepOptionSection() {
-  const [selectedStep] = useAtom(SelectedStepStore);
+  const [steps] = useAtom(StepsStore);
+
+  const selectedStep = steps.find((s) => s.selected);
+  const selectedTab =
+    selectedStep?.selectedActionInput || ActionInputType.simple;
+
+  const [optionTab, setOptionTab] = useState<ActionInputType>(
+    () => selectedTab
+  );
+
+  function handleOptionChange(value: ActionInputType) {
+    setOptionTab(value);
+  }
 
   return (
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Group position="apart">
-          <Text fw={500}>Step Options</Text>
+          <Text fw={500}>Step Options - {selectedStep?.action}</Text>
         </Group>
       </Card.Section>
       <SegmentedControl
@@ -28,10 +43,39 @@ function StepOptionSection() {
         radius="md"
         color="gray"
         data={[
-          { label: "Simple", value: "simple" },
-          { label: "Advance", value: "advance" },
-          { label: "Other", value: "other" },
+          {
+            label:
+              selectedStep?.selectedActionInput == ActionInputType.simple ? (
+                <TabName name="Simple" />
+              ) : (
+                "Simple"
+              ),
+            value: ActionInputType.simple,
+            disabled: !selectedStep?.actionInput?.inputDataSimple,
+          },
+          {
+            label:
+              selectedStep?.selectedActionInput == ActionInputType.advance ? (
+                <TabName name="Advance" />
+              ) : (
+                "Advance"
+              ),
+            value: ActionInputType.advance,
+            disabled: !selectedStep?.actionInput?.inputDataAdvance,
+          },
+          {
+            label:
+              selectedStep?.selectedActionInput == ActionInputType.raw ? (
+                <TabName name="Raw" />
+              ) : (
+                "Raw"
+              ),
+            value: ActionInputType.raw,
+            disabled: !selectedStep?.actionInput?.inputDataRaw,
+          },
         ]}
+        value={optionTab}
+        onChange={handleOptionChange}
       />
       <ScrollArea
         h="calc(100% - 120px)"
@@ -47,19 +91,82 @@ function StepOptionSection() {
           borderRadius: theme.radius.md,
         })}
       >
-        {selectedStep == null && <NoStepSelected />}
-        {selectedStep != null && <BasicOption />}
+        <StepOptionForm actionInputType={optionTab} />
       </ScrollArea>
     </Card>
   );
 }
 
-function BasicOption() {
+interface TabNameProps {
+  name: string;
+}
+function TabName({ name }: TabNameProps) {
+  return (
+    <Center>
+      <IconCircleCheck size="1rem" />
+      <Box ml={10}>{name}</Box>
+    </Center>
+  );
+}
+
+interface StepOptionFormProps {
+  actionInputType: ActionInputType;
+}
+function StepOptionForm({ actionInputType }: StepOptionFormProps) {
+  const [steps, setSteps] = useAtom(StepsStore);
+
+  const selectedStep = steps.find((s) => s.selected);
+
+  if (!selectedStep) return <NoStepSelected />;
+
+  function handelOnChange(values: Field[]) {
+    const selectedStep = steps.find((s) => s.selected);
+    const newSelectedStep = { ...selectedStep } as StepItem;
+
+    newSelectedStep.selectedActionInput = actionInputType;
+
+    if (!values) return;
+
+    if (!newSelectedStep.actionInput) return;
+
+    if (actionInputType == ActionInputType.simple) {
+      newSelectedStep.actionInput.inputDataSimple = [...values];
+    } else if (actionInputType == ActionInputType.advance) {
+      newSelectedStep.actionInput.inputDataAdvance = [...values];
+    } else if (actionInputType == ActionInputType.raw) {
+      newSelectedStep.actionInput.inputDataRaw = [...values];
+    }
+
+    const newSteps = steps.map((s) => {
+      if (s.id === newSelectedStep.id) {
+        console.log(s.id);
+        return newSelectedStep;
+      }
+      return s;
+    });
+    setSteps(newSteps);
+  }
+
+  function GetActionInput() {
+    if (!selectedStep) return [];
+
+    if (actionInputType == ActionInputType.simple) {
+      return selectedStep.actionInput?.inputDataSimple ?? [];
+    } else if (actionInputType == ActionInputType.advance) {
+      return selectedStep.actionInput?.inputDataAdvance ?? [];
+    } else if (actionInputType == ActionInputType.raw) {
+      return selectedStep.actionInput?.inputDataRaw ?? [];
+    }
+    return [];
+  }
+
   return (
     <Stack p="md">
-      <Input.Wrapper id="input-demo" withAsterisk label="URL">
-        <Input id="input-demo" placeholder="url" />
-      </Input.Wrapper>
+      <DynamicForm
+        id={selectedStep.id}
+        fields={GetActionInput()}
+        onChange={handelOnChange}
+      />
     </Stack>
   );
 }

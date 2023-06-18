@@ -15,9 +15,37 @@ export interface StepItem extends Step {
   id: string;
   actionItem: Action;
   selected: boolean;
+  actionInput: ActionInput | null;
+  selectedActionInput: ActionInputType | null;
 }
 
 export enum DragList {
   actionList = "action-list",
   stepList = "step-list",
+}
+
+export interface Field {
+  label: string;
+  description: string;
+  type: string;
+  element: "input" | "textarea" | "json" | "select" | "checkbox";
+  options?: string[];
+  value: string;
+  name?: string;
+}
+
+export interface ActionInput {
+  inputDataSimple: Field[] | null;
+  inputDataAdvance: Field[] | null;
+  inputDataRaw: Field[] | null;
+}
+
+export interface Dictionary<T> {
+  [Key: string]: T;
+}
+
+export enum ActionInputType {
+  simple = "simple",
+  advance = "advance",
+  raw = "raw",
 }

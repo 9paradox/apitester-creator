@@ -8,6 +8,7 @@ import { ActionsStore, StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
 import { useDisclosure } from "@mantine/hooks";
 import ExportDrawer from "./ExportDrawer";
+import { GetActionInput } from "../constants/ACTIONS_INPUT";
 
 export function Editor() {
   const [actions] = useAtom(ActionsStore);
@@ -25,12 +26,16 @@ export function Editor() {
     ) {
       const action = actions[source.index];
 
+      const actionInput = GetActionInput(action.name);
+
       const newStep: StepItem = {
         id: action.name + "-" + steps.length + "-" + new Date().getTime(),
         actionItem: action,
         action: action.name,
         selected: false,
-        inputData: undefined,
+        inputData: null,
+        actionInput: actionInput,
+        selectedActionInput: null,
       };
 
       const newSteps = [...steps];

@@ -22,7 +22,7 @@ import {
 } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { SelectedStepStore, StepsStore } from "../Store";
+import { StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
 import { useAtom } from "jotai";
 import { useDisclosure } from "@mantine/hooks";
@@ -35,7 +35,6 @@ function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
   const [deleteStepModelOpened, setDeleteStepModel] = useDisclosure(false);
   const { classes } = useStyles();
   const [steps, setSteps] = useAtom(StepsStore);
-  const [selectedStep, setSelectedStep] = useAtom(SelectedStepStore);
 
   function selectStep(step: StepItem) {
     const unselectedSteps = steps.map((s) => {
@@ -51,7 +50,6 @@ function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
       }
       return s;
     });
-    setSelectedStep(step);
     setSteps([...newSteps]);
   }
 
@@ -72,15 +70,16 @@ function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
   }
 
   function deleteStep() {
+    const selectedStep = steps.find((s) => s.selected);
     if (selectedStep == null) return;
 
     const newSteps = steps.filter((s) => s.id !== selectedStep.id);
     setSteps([...newSteps]);
-    setSelectedStep(null);
     setDeleteStepModel.close();
   }
 
   function handleMenuClick(action: string) {
+    const selectedStep = steps.find((s) => s.selected);
     if (selectedStep == null) return;
 
     switch (action) {
