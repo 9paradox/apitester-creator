@@ -18,11 +18,8 @@ function StepOptionSection() {
   const { getSelectedStep } = useSteps();
 
   const selectedStep = getSelectedStep();
-  const selectedTab =
-    selectedStep?.selectedActionInput || ActionInputType.simple;
-
   const [optionTab, setOptionTab] = useState<ActionInputType>(
-    () => selectedTab
+    ActionInputType.simple
   );
 
   function handleOptionChange(value: ActionInputType) {
@@ -112,8 +109,7 @@ interface StepOptionFormProps {
   actionInputType: ActionInputType;
 }
 function StepOptionForm({ actionInputType }: StepOptionFormProps) {
-  const { getSelectedStep, updateStepActionInput, getStepActionInput } =
-    useSteps();
+  const { getSelectedStep, updateStepActionInput } = useSteps();
 
   const selectedStep = getSelectedStep();
 
@@ -128,7 +124,6 @@ function StepOptionForm({ actionInputType }: StepOptionFormProps) {
       <DynamicForm
         actionInputType={actionInputType}
         id={selectedStep.id}
-        fields={getStepActionInput(actionInputType)}
         onChange={handelOnChange}
       />
     </Stack>

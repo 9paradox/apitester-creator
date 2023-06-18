@@ -105,7 +105,6 @@ export const useSteps = () => {
 
     const newSteps = steps.map((s) => {
       if (s.id === newSelectedStep.id) {
-        console.log(s.id, actionInputType);
         return newSelectedStep;
       }
       return s;
@@ -127,7 +126,6 @@ export const useSteps = () => {
       actionInputs = selectedStep.actionInput?.inputDataRaw ?? [];
     }
 
-    console.log(actionInputType, "eee", actionInputs);
     return actionInputs;
   }
 

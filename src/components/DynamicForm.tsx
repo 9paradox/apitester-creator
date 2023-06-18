@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Textarea,
   Select,
@@ -12,25 +12,31 @@ import {
 } from "@mantine/core";
 import { ActionInputType, Field } from "../Types";
 import { IconInfoTriangle } from "@tabler/icons-react";
+import { useSteps } from "../Store";
 
 interface DynamicFormProps {
   id: string;
   actionInputType: ActionInputType;
-  fields: Field[];
   onChange: (fields: Field[]) => void;
 }
 
-function DynamicForm({ fields, actionInputType, onChange }: DynamicFormProps) {
+function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
   const [formValues, setFormValues] = useState<Field[]>([]);
+  const { getStepActionInput } = useSteps();
 
-  if (!fields || fields.length === 0) return <NoOptionsAvailable />;
+  useEffect(() => {
+    const actionInput = getStepActionInput(actionInputType);
+    setFormValues(actionInput);
+  }, [id, actionInputType]);
+
+  if (!formValues || formValues.length === 0) return <NoOptionsAvailable />;
 
   const handleChange = (fieldName: string, value?: string | null) => {
     if (value == undefined) return;
 
     const newFields: Field[] = [];
 
-    fields.forEach((field) => {
+    formValues.forEach((field) => {
       if (field.label === fieldName) {
         field.value = value;
       }
@@ -46,11 +52,9 @@ function DynamicForm({ fields, actionInputType, onChange }: DynamicFormProps) {
     onChange(formValues);
   }
 
-  console.log(actionInputType, formValues, fields);
-
   return (
     <form onSubmit={handelOnSubmit}>
-      {fields.map((field, index) => {
+      {formValues.map((field, index) => {
         switch (field.element) {
           case "input":
             return (
@@ -92,7 +96,7 @@ function DynamicForm({ fields, actionInputType, onChange }: DynamicFormProps) {
                 autosize={true}
                 minRows={4}
                 label={field.label}
-                value={field.value || ""}
+                value={field.value}
                 onChange={(event) => handleChange(field.label, event)}
               />
             );
