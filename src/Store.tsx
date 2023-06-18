@@ -1,7 +1,10 @@
 import { atom, useAtom } from "jotai";
 import { Action, ActionInputType, Field, StepItem } from "./Types";
 import { ACTIONS } from "./constants/ACTIONS";
-import { GetActionInput } from "./constants/ACTIONS_INPUT";
+import {
+  GetActionInput,
+  GetDefaultActionInputType,
+} from "./constants/ACTIONS_INPUT";
 import { CloneObject } from "./Helper";
 
 const actions = atom<Action[]>(ACTIONS);
@@ -25,7 +28,7 @@ export const useSteps = () => {
       selected: false,
       inputData: null,
       actionInput: actionInput,
-      selectedActionInput: null,
+      selectedActionInput: GetDefaultActionInputType(action.name),
     };
 
     const newSteps = [...steps];

@@ -1,5 +1,5 @@
 import { CloneObject } from "../Helper";
-import { Field, Dictionary, ActionInput } from "../Types";
+import { Field, Dictionary, ActionInput, ActionInputType } from "../Types";
 import { ACTIONS } from "./ACTIONS";
 
 const ToBeType = [
@@ -295,4 +295,14 @@ export function GetActionInput(actionName: string): ActionInput | null {
     inputDataAdvance: CloneObject(action.inputDataAdvance),
     inputDataRaw: CloneObject(action.inputDataRaw),
   };
+}
+
+export function GetDefaultActionInputType(actionName: string): ActionInputType {
+  const action = ACTIONS_INPUT[actionName];
+  if (!action) return ActionInputType.simple;
+  return action.inputDataSimple
+    ? ActionInputType.simple
+    : action.inputDataAdvance
+    ? ActionInputType.advance
+    : ActionInputType.raw;
 }

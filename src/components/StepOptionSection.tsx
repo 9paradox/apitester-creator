@@ -12,15 +12,25 @@ import { IconCircleCheck, IconClick } from "@tabler/icons-react";
 import DynamicForm from "./DynamicForm";
 import { ActionInputType, Field } from "../Types";
 import { useSteps } from "../Store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function StepOptionSection() {
   const { getSelectedStep } = useSteps();
 
-  const selectedStep = getSelectedStep();
   const [optionTab, setOptionTab] = useState<ActionInputType>(
     ActionInputType.simple
   );
+
+  const selectedStep = getSelectedStep();
+
+  useEffect(() => {
+    if (
+      !selectedStep?.selectedActionInput ||
+      selectedStep?.selectedActionInput != optionTab
+    ) {
+      setOptionTab(selectedStep?.selectedActionInput ?? ActionInputType.simple);
+    }
+  }, [selectedStep?.selectedActionInput]);
 
   function handleOptionChange(value: ActionInputType) {
     setOptionTab(value);
