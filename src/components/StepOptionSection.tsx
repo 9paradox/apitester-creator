@@ -9,16 +9,15 @@ import {
   Box,
 } from "@mantine/core";
 import { IconCircleCheck, IconClick } from "@tabler/icons-react";
-import { useAtom } from "jotai";
-import { StepsStore } from "../Store";
-import { useState } from "react";
 import DynamicForm from "./DynamicForm";
-import { ActionInputType, Field, StepItem } from "../Types";
+import { ActionInputType, Field } from "../Types";
+import { useSteps } from "../Store";
+import { useState } from "react";
 
 function StepOptionSection() {
-  const [steps] = useAtom(StepsStore);
+  const { getSelectedStep } = useSteps();
 
-  const selectedStep = steps.find((s) => s.selected);
+  const selectedStep = getSelectedStep();
   const selectedTab =
     selectedStep?.selectedActionInput || ActionInputType.simple;
 
@@ -113,58 +112,23 @@ interface StepOptionFormProps {
   actionInputType: ActionInputType;
 }
 function StepOptionForm({ actionInputType }: StepOptionFormProps) {
-  const [steps, setSteps] = useAtom(StepsStore);
+  const { getSelectedStep, updateStepActionInput, getStepActionInput } =
+    useSteps();
 
-  const selectedStep = steps.find((s) => s.selected);
+  const selectedStep = getSelectedStep();
 
   if (!selectedStep) return <NoStepSelected />;
 
   function handelOnChange(values: Field[]) {
-    const selectedStep = steps.find((s) => s.selected);
-    const newSelectedStep = { ...selectedStep } as StepItem;
-
-    newSelectedStep.selectedActionInput = actionInputType;
-
-    if (!values) return;
-
-    if (!newSelectedStep.actionInput) return;
-
-    if (actionInputType == ActionInputType.simple) {
-      newSelectedStep.actionInput.inputDataSimple = [...values];
-    } else if (actionInputType == ActionInputType.advance) {
-      newSelectedStep.actionInput.inputDataAdvance = [...values];
-    } else if (actionInputType == ActionInputType.raw) {
-      newSelectedStep.actionInput.inputDataRaw = [...values];
-    }
-
-    const newSteps = steps.map((s) => {
-      if (s.id === newSelectedStep.id) {
-        console.log(s.id);
-        return newSelectedStep;
-      }
-      return s;
-    });
-    setSteps(newSteps);
-  }
-
-  function GetActionInput() {
-    if (!selectedStep) return [];
-
-    if (actionInputType == ActionInputType.simple) {
-      return selectedStep.actionInput?.inputDataSimple ?? [];
-    } else if (actionInputType == ActionInputType.advance) {
-      return selectedStep.actionInput?.inputDataAdvance ?? [];
-    } else if (actionInputType == ActionInputType.raw) {
-      return selectedStep.actionInput?.inputDataRaw ?? [];
-    }
-    return [];
+    updateStepActionInput(values, actionInputType);
   }
 
   return (
     <Stack p="md">
       <DynamicForm
+        actionInputType={actionInputType}
         id={selectedStep.id}
-        fields={GetActionInput()}
+        fields={getStepActionInput(actionInputType)}
         onChange={handelOnChange}
       />
     </Stack>

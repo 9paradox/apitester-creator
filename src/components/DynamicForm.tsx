@@ -10,17 +10,18 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { Field } from "../Types";
+import { ActionInputType, Field } from "../Types";
 import { IconInfoTriangle } from "@tabler/icons-react";
 
 interface DynamicFormProps {
   id: string;
+  actionInputType: ActionInputType;
   fields: Field[];
   onChange: (fields: Field[]) => void;
 }
 
-function DynamicForm({ fields, onChange }: DynamicFormProps) {
-  const [formValues, setFormValues] = useState<Field[]>([...fields]);
+function DynamicForm({ fields, actionInputType, onChange }: DynamicFormProps) {
+  const [formValues, setFormValues] = useState<Field[]>([]);
 
   if (!fields || fields.length === 0) return <NoOptionsAvailable />;
 
@@ -41,9 +42,11 @@ function DynamicForm({ fields, onChange }: DynamicFormProps) {
 
   function handelOnSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log("aa", formValues);
+    if (!formValues || formValues.length === 0) return;
     onChange(formValues);
   }
+
+  console.log(actionInputType, formValues, fields);
 
   return (
     <form onSubmit={handelOnSubmit}>

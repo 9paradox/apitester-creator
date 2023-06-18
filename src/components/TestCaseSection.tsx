@@ -22,10 +22,9 @@ import {
 } from "@tabler/icons-react";
 import useStyles from "../CustomStyles";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { StepsStore } from "../Store";
 import { DragList, StepItem } from "../Types";
-import { useAtom } from "jotai";
 import { useDisclosure } from "@mantine/hooks";
+import { useSteps } from "../Store";
 
 interface TestCaseSectionProps {
   onExportClick: () => void;
@@ -34,52 +33,18 @@ interface TestCaseSectionProps {
 function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
   const [deleteStepModelOpened, setDeleteStepModel] = useDisclosure(false);
   const { classes } = useStyles();
-  const [steps, setSteps] = useAtom(StepsStore);
+  const { steps, selectStep, getSelectedStep, duplicateStep, deleteStep } =
+    useSteps();
 
-  function selectStep(step: StepItem) {
-    const unselectedSteps = steps.map((s) => {
-      s.selected = false;
-      return s;
-    });
-
-    setSteps(unselectedSteps);
-
-    const newSteps = steps.map((s) => {
-      if (s.id === step.id) {
-        s.selected = !s.selected;
-      }
-      return s;
-    });
-    setSteps([...newSteps]);
-  }
-
-  function duplicateStep(step: StepItem) {
-    const newStep: StepItem = {
-      ...step,
-    };
-
-    newStep.id =
-      step.actionItem.name + "-" + steps.length + "-" + new Date().getTime();
-
-    newStep.selected = false;
-
-    const newSteps = [...steps];
-    newSteps.splice(steps.indexOf(step) + 1, 0, newStep);
-
-    setSteps([...newSteps]);
-  }
-
-  function deleteStep() {
-    const selectedStep = steps.find((s) => s.selected);
+  function handelDeleteStep() {
+    const selectedStep = getSelectedStep();
     if (selectedStep == null) return;
-
-    const newSteps = steps.filter((s) => s.id !== selectedStep.id);
-    setSteps([...newSteps]);
+    deleteStep(selectedStep);
     setDeleteStepModel.close();
   }
 
   function handleMenuClick(action: string) {
-    const selectedStep = steps.find((s) => s.selected);
+    const selectedStep = getSelectedStep();
     if (selectedStep == null) return;
 
     switch (action) {
@@ -105,7 +70,7 @@ function TestCaseSection({ onExportClick }: TestCaseSectionProps) {
             variant="light"
             leftIcon={<IconTrash size={14} />}
             color="red"
-            onClick={() => deleteStep()}
+            onClick={() => handelDeleteStep()}
           >
             Delete
           </Button>

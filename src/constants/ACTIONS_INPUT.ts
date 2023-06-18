@@ -1,3 +1,4 @@
+import { CloneObject } from "../Helper";
 import { Field, Dictionary, ActionInput } from "../Types";
 import { ACTIONS } from "./ACTIONS";
 
@@ -286,16 +287,12 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
   },
 };
 
-function CloneObject<T>(source: T): T {
-  return JSON.parse(JSON.stringify(source));
-}
-
 export function GetActionInput(actionName: string): ActionInput | null {
   const action = ACTIONS_INPUT[actionName];
   if (!action) return null;
   return {
-    inputDataSimple: JSON.parse(JSON.stringify(action.inputDataSimple)),
-    inputDataAdvance: JSON.parse(JSON.stringify(action.inputDataAdvance)),
-    inputDataRaw: JSON.parse(JSON.stringify(action.inputDataRaw)),
+    inputDataSimple: CloneObject(action.inputDataSimple),
+    inputDataAdvance: CloneObject(action.inputDataAdvance),
+    inputDataRaw: CloneObject(action.inputDataRaw),
   };
 }

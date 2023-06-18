@@ -3,16 +3,13 @@ import ActionSection from "./ActionSection";
 import TestCaseSection from "./TestCaseSection";
 import StepOptionSection from "./StepOptionSection";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { useAtom } from "jotai";
-import { ActionsStore, StepsStore } from "../Store";
-import { DragList, StepItem } from "../Types";
+import { useSteps } from "../Store";
+import { DragList } from "../Types";
 import { useDisclosure } from "@mantine/hooks";
 import ExportDrawer from "./ExportDrawer";
-import { GetActionInput } from "../constants/ACTIONS_INPUT";
 
 export function Editor() {
-  const [actions] = useAtom(ActionsStore);
-  const [steps, setSteps] = useAtom(StepsStore);
+  const { addStepFromAction, reorderStep } = useSteps();
   const [exportDrawerOpened, setExportDrawerOpened] = useDisclosure(false);
 
   const onDragEnd = ({ source, destination }: DropResult) => {
@@ -24,26 +21,7 @@ export function Editor() {
       source.droppableId == DragList.actionList &&
       destination.droppableId == DragList.stepList
     ) {
-      const action = actions[source.index];
-
-      const actionInput = GetActionInput(action.name);
-
-      const newStep: StepItem = {
-        id: action.name + "-" + steps.length + "-" + new Date().getTime(),
-        actionItem: action,
-        action: action.name,
-        selected: false,
-        inputData: null,
-        actionInput: actionInput,
-        selectedActionInput: null,
-      };
-
-      const newSteps = [...steps];
-
-      newSteps.splice(destination.index, 0, newStep);
-
-      setSteps([...newSteps]);
-
+      addStepFromAction(source.index, destination.index);
       return;
     }
 
@@ -51,10 +29,7 @@ export function Editor() {
       source.droppableId == DragList.stepList &&
       destination.droppableId == DragList.stepList
     ) {
-      const newSteps = [...steps];
-      const [removed] = newSteps.splice(source.index, 1);
-      newSteps.splice(destination.index, 0, removed);
-      setSteps([...newSteps]);
+      reorderStep(source.index, destination.index);
     }
   };
 
