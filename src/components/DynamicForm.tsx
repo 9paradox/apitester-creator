@@ -91,6 +91,10 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
               <JsonInput
                 key={index}
                 description={field.description}
+                disabled={
+                  actionInputType === ActionInputType.raw &&
+                  formValues[0].value === "true"
+                }
                 mb="md"
                 formatOnBlur
                 autosize={true}

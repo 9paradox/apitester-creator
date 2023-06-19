@@ -42,8 +42,15 @@ const StepOptionsType: Field[] = [
 
 const RawOptions: Field[] = [
   {
+    label: "useFromLastStep",
+    description: "check to input data from last step output data",
+    type: "bool",
+    element: "checkbox",
+    value: "false",
+  },
+  {
     label: "raw",
-    description: "raw data in json format, set null to pick from last step",
+    description: "raw data in json format",
     type: "any",
     element: "json",
     value: "",
