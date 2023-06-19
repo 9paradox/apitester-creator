@@ -30,6 +30,7 @@ const StepOptionsType: Field[] = [
     element: "select",
     options: CloneObject(ActionNames),
     value: "",
+    required: true,
   },
   {
     label: "inputData",
@@ -64,6 +65,7 @@ const AxiosRequestConfigType: Field[] = [
     type: "string",
     element: "input",
     value: "",
+    required: true,
   },
   {
     label: "data",
@@ -71,6 +73,7 @@ const AxiosRequestConfigType: Field[] = [
     type: "any",
     element: "json",
     value: "",
+    required: true,
   },
   {
     label: "method",
@@ -79,6 +82,7 @@ const AxiosRequestConfigType: Field[] = [
     element: "select",
     options: ["GET", "POST", "PUT", "DELETE"],
     value: "GET",
+    required: true,
   },
   {
     label: "params",
@@ -126,6 +130,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "input",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: CloneObject(AxiosRequestConfigType),
@@ -139,6 +144,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "input",
         value: "",
+        required: true,
       },
       {
         label: "data",
@@ -146,6 +152,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "any",
         element: "json",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: CloneObject(AxiosRequestConfigType),
@@ -164,6 +171,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "textarea",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: null,
@@ -178,6 +186,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "textarea",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: null,
@@ -191,6 +200,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "input",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: [
@@ -200,6 +210,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "input",
         value: "",
+        required: true,
       },
       {
         label: "outputDataFormat",
@@ -208,6 +219,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         element: "select",
         value: "string",
         options: ["string", "number", "boolean", "object"],
+        required: true,
       },
     ],
     inputDataRaw: CloneObject(RawOptions),
@@ -220,6 +232,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "string",
         element: "textarea",
         value: "",
+        required: true,
       },
       {
         label: "expected",
@@ -227,6 +240,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "any",
         element: "textarea",
         value: "",
+        required: true,
       },
       {
         label: "toBe",
@@ -235,6 +249,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         element: "select",
         options: CloneObject(ToBeType),
         value: "equal",
+        required: true,
       },
     ],
     inputDataAdvance: null,
@@ -248,6 +263,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "any",
         element: "textarea",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: [
@@ -257,6 +273,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "any",
         element: "textarea",
         value: "",
+        required: true,
       },
       {
         label: "toBe",
@@ -265,6 +282,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         element: "select",
         options: CloneObject(ToBeType),
         value: "equal",
+        required: true,
       },
     ],
     inputDataRaw: CloneObject(RawOptions),
@@ -277,6 +295,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
         type: "number",
         element: "input",
         value: "",
+        required: true,
       },
     ],
     inputDataAdvance: null,

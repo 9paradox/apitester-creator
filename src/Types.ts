@@ -32,6 +32,7 @@ export interface Field {
   options?: string[];
   value: string;
   name?: string;
+  required?: boolean;
 }
 
 export interface ActionInput {

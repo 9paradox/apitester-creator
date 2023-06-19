@@ -9,9 +9,10 @@ import {
   Center,
   Stack,
   Text,
+  Alert,
 } from "@mantine/core";
 import { ActionInputType, Field } from "../Types";
-import { IconInfoTriangle } from "@tabler/icons-react";
+import { IconAlertCircle, IconInfoTriangle } from "@tabler/icons-react";
 import { useSteps } from "../Store";
 
 interface DynamicFormProps {
@@ -22,6 +23,7 @@ interface DynamicFormProps {
 
 function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
   const [formValues, setFormValues] = useState<Field[]>([]);
+  const [hasError, setHasError] = useState<boolean>(false);
   const { getStepActionInput } = useSteps();
 
   useEffect(() => {
@@ -49,6 +51,16 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
   function handelOnSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!formValues || formValues.length === 0) return;
+
+    const hasEmptyFields = formValues.some(
+      (field) => field.required && field.value === ""
+    );
+
+    if (hasEmptyFields) {
+      setHasError(true);
+      return;
+    }
+
     onChange(formValues);
   }
 
@@ -65,6 +77,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
                 type="text"
                 mb="md"
                 value={field.value}
+                withAsterisk={field.required}
                 onChange={(event) =>
                   handleChange(field.label, event.currentTarget.value)
                 }
@@ -80,6 +93,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
                 minRows={4}
                 label={field.label}
                 value={field.value}
+                withAsterisk={field.required}
                 onChange={(event) =>
                   handleChange(field.label, event.currentTarget.value)
                 }
@@ -101,6 +115,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
                 minRows={4}
                 label={field.label}
                 value={field.value}
+                withAsterisk={field.required}
                 onChange={(event) => handleChange(field.label, event)}
               />
             );
@@ -112,6 +127,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
                 mb="md"
                 label={field.label}
                 value={field.value}
+                withAsterisk={field.required}
                 onChange={(event) => handleChange(field.label, event)}
                 data={field.options ?? []}
               ></Select>
@@ -136,6 +152,20 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
             return null;
         }
       })}
+
+      {hasError && (
+        <Alert
+          icon={<IconAlertCircle size="1rem" />}
+          title="Not saved!"
+          color="red"
+          withCloseButton
+          mb="md"
+          onClose={() => setHasError(false)}
+        >
+          Please fill all required fields before submitting.
+        </Alert>
+      )}
+
       <Button fullWidth variant="outline" type="submit">
         Update
       </Button>
