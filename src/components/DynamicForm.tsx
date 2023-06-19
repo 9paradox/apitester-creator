@@ -29,6 +29,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
   useEffect(() => {
     const actionInput = getStepActionInput(actionInputType);
     setFormValues(actionInput);
+    setHasError(false);
   }, [id, actionInputType]);
 
   if (!formValues || formValues.length === 0) return <NoOptionsAvailable />;
@@ -60,7 +61,7 @@ function DynamicForm({ id, actionInputType, onChange }: DynamicFormProps) {
       setHasError(true);
       return;
     }
-
+    setHasError(false);
     onChange(formValues);
   }
 
