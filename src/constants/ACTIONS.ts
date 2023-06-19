@@ -76,23 +76,9 @@ export const ACTIONS: Action[] = [
   },
   {
     index: 10,
-    name: "custom",
-    type: "ACTION",
-    color: "blue",
-    description: "Run custom function as a step.",
-  },
-  {
-    index: 11,
     name: "log",
     type: "OTHER",
     color: "gray",
     description: "Last steps will be logged to a file.",
-  },
-  {
-    index: 12,
-    name: "getStep",
-    type: "ACTION",
-    color: "blue",
-    description: "Returns the specific step with its input and output data.",
   },
 ];
