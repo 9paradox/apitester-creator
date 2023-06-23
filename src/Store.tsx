@@ -1,5 +1,12 @@
 import { atom, useAtom } from "jotai";
-import { Action, ActionInputType, Field, StepItem } from "./Types";
+import {
+  Action,
+  ActionInputType,
+  Field,
+  Step,
+  StepItem,
+  ValueType,
+} from "./Types";
 import { ACTIONS } from "./constants/ACTIONS";
 import {
   GetActionInput,
@@ -132,6 +139,95 @@ export const useSteps = () => {
     return actionInputs;
   }
 
+  function buildStep(step: StepItem) {
+    if (!step.actionInput || !step.selectedActionInput) return null;
+
+    const actionInput = step.actionInput;
+
+    if (
+      step.selectedActionInput == ActionInputType.simple &&
+      actionInput.inputDataSimple != null &&
+      actionInput.inputDataSimple.length > 0
+    ) {
+      if (actionInput.inputDataSimple.length == 1) {
+        const actionInputSimple = actionInput.inputDataSimple[0];
+        return getValue(actionInputSimple.value, actionInputSimple.type);
+      } else {
+        const actionInputSimples = actionInput.inputDataSimple;
+        const finalInputs: any = {};
+        actionInputSimples.forEach((actionInputSimple) => {
+          finalInputs[actionInputSimple.label] = getValue(
+            actionInputSimple.value,
+            actionInputSimple.type
+          );
+        });
+        return finalInputs;
+      }
+    }
+
+    if (
+      step.selectedActionInput == ActionInputType.advance &&
+      actionInput.inputDataAdvance != null &&
+      actionInput.inputDataAdvance.length > 0
+    ) {
+      const actionInputAdvances = actionInput.inputDataAdvance;
+      const finalInputs: any = {};
+      actionInputAdvances.forEach((actionInputAdvance) => {
+        finalInputs[actionInputAdvance.label] = getValue(
+          actionInputAdvance.value,
+          actionInputAdvance.type
+        );
+      });
+      return finalInputs;
+    }
+
+    if (
+      step.selectedActionInput == ActionInputType.raw &&
+      actionInput.inputDataRaw != null &&
+      actionInput.inputDataRaw.length > 0
+    ) {
+      if (actionInput.inputDataRaw[0].value == "true") {
+        return null;
+      } else {
+        const actionInputRaw = actionInput.inputDataRaw[1];
+        return getValue(actionInputRaw.value, actionInputRaw.type);
+      }
+    }
+
+    return null;
+  }
+
+  function getValue(value: string, valueType: ValueType) {
+    if (valueType == "string") {
+      return value;
+    } else if (valueType == "number") {
+      return Number(value);
+    } else if (valueType == "boolean") {
+      return value == "true";
+    } else if (valueType == "object") {
+      return JSON.parse(value);
+    }
+    return null;
+  }
+
+  function buildJsonTestcase(title: string) {
+    const finalSteps: Step[] = [];
+
+    steps.forEach((step) => {
+      const stepItem: Step = {
+        action: step.action,
+        inputData: buildStep(step),
+      };
+      finalSteps.push(stepItem);
+    });
+
+    const jsonTestcase = {
+      title: title,
+      steps: finalSteps,
+    };
+    return jsonTestcase;
+  }
+
   return {
     steps,
     addStepFromAction,
@@ -142,5 +238,6 @@ export const useSteps = () => {
     deleteStep,
     updateStepActionInput,
     getStepActionInput,
+    buildJsonTestcase,
   };
 };

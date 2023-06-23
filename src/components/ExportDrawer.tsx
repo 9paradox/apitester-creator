@@ -7,7 +7,12 @@ import {
   Textarea,
   rem,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconDownload } from "@tabler/icons-react";
+import { useSteps } from "../Store";
+import { useState } from "react";
+
+const tempFilename = "testcase-" + new Date().getTime();
 
 export interface ExportDrawerProps {
   opened: boolean;
@@ -15,6 +20,47 @@ export interface ExportDrawerProps {
 }
 
 function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
+  const [title, setTitle] = useState("");
+  const [filename, setFilename] = useState(tempFilename);
+  const [loading, setLoading] = useState(false);
+
+  const { buildJsonTestcase } = useSteps();
+
+  function handelDownload() {
+    setLoading(true);
+    const jsonTestcase = buildJsonTestcase(title);
+
+    downloadJSON(jsonTestcase, filename);
+    setLoading(false);
+    notifications.show({
+      title: "Testcase exported successfully",
+      message: "Testcase '" + filename + ".json' exported successfully",
+      color: "green",
+      autoClose: 3000,
+      icon: <IconDownload size={20} />,
+      withBorder: true,
+    });
+    onClose();
+  }
+
+  function downloadJSON(jsonData: unknown, filename: string) {
+    const jsonContent = JSON.stringify(jsonData, null, 2);
+    const dataURL = `data:application/json;charset=utf-8,${encodeURIComponent(
+      jsonContent
+    )}`;
+
+    const anchorElement = document.createElement("a");
+    anchorElement.href = dataURL;
+    anchorElement.download = filename;
+
+    anchorElement.style.display = "none";
+    document.body.appendChild(anchorElement);
+
+    anchorElement.click();
+
+    document.body.removeChild(anchorElement);
+  }
+
   return (
     <Drawer
       opened={opened}
@@ -23,18 +69,32 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
       position="right"
     >
       <Stack>
+        <Textarea
+          placeholder="testcase title"
+          label="Title"
+          withAsterisk
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <TextInput
           placeholder="testcase-filename"
           label="Filename"
           withAsterisk
           rightSection={<JsonFileText />}
           rightSectionWidth={90}
+          value={filename}
           onChange={(e) => {
             e.target.value = e.target.value.replace(/[^a-zA-Z0-9_]/g, "-");
+            setFilename(e.target.value);
           }}
         />
-        <Textarea placeholder="testcase title" label="Title" withAsterisk />
-        <Button mt="sm" leftIcon={<IconDownload size={14} />} color="green">
+        <Button
+          mt="sm"
+          leftIcon={<IconDownload size={14} />}
+          color="green"
+          disabled={filename === "" || title === ""}
+          onClick={handelDownload}
+          loading={loading}
+        >
           Download
         </Button>
       </Stack>

@@ -35,7 +35,7 @@ const StepOptionsType: Field[] = [
   {
     label: "inputData",
     description: "input data in json format",
-    type: "any",
+    type: "object",
     element: "json",
     value: "",
   },
@@ -45,14 +45,14 @@ const RawOptions: Field[] = [
   {
     label: "useFromLastStep",
     description: "check to input data from last step output data",
-    type: "bool",
+    type: "boolean",
     element: "checkbox",
     value: "false",
   },
   {
     label: "raw",
     description: "raw data in json format",
-    type: "any",
+    type: "object",
     element: "json",
     value: "",
   },
@@ -70,7 +70,7 @@ const AxiosRequestConfigType: Field[] = [
   {
     label: "data",
     description: "data of the request in json format",
-    type: "any",
+    type: "object",
     element: "json",
     value: "",
     required: true,
@@ -87,14 +87,14 @@ const AxiosRequestConfigType: Field[] = [
   {
     label: "params",
     description: "params of the request",
-    type: "any",
+    type: "object",
     element: "textarea",
     value: "",
   },
   {
     label: "headers",
     description: "headers of the request in json format",
-    type: "any",
+    type: "object",
     element: "json",
     value: "",
   },
@@ -115,7 +115,7 @@ const AxiosRequestConfigType: Field[] = [
   {
     label: "auth",
     description: "auth of the request in json format",
-    type: "any",
+    type: "object",
     element: "json",
     value: "",
   },
@@ -149,7 +149,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
       {
         label: "data",
         description: "data of the request in json format",
-        type: "any",
+        type: "object",
         element: "json",
         value: "",
         required: true,
@@ -237,7 +237,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
       {
         label: "expected",
         description: "expected value",
-        type: "any",
+        type: "object",
         element: "textarea",
         value: "",
         required: true,
@@ -260,7 +260,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
       {
         label: "expected",
         description: "expected value",
-        type: "any",
+        type: "object",
         element: "textarea",
         value: "",
         required: true,
@@ -270,7 +270,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
       {
         label: "expected",
         description: "expected value",
-        type: "any",
+        type: "object",
         element: "textarea",
         value: "",
         required: true,
@@ -278,7 +278,7 @@ export const ACTIONS_INPUT: Dictionary<ActionInput> = {
       {
         label: "toBe",
         description: "compare value with expected value",
-        type: "$ToBe",
+        type: "string",
         element: "select",
         options: CloneObject(ToBeType),
         value: "equal",

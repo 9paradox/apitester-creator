@@ -3,6 +3,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import "./App.css";
 import Editor from "./components/Editor";
 import AppHeader from "./components/AppHeader";
@@ -23,6 +24,7 @@ function App() {
         withGlobalStyles
         withNormalizeCSS
       >
+        <Notifications position="top-right" />
         <AppHeader />
         <Editor />
         <AppFooter />

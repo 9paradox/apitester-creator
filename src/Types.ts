@@ -24,10 +24,12 @@ export enum DragList {
   stepList = "step-list",
 }
 
+export type ValueType = "string" | "number" | "boolean" | "object";
+
 export interface Field {
   label: string;
   description: string;
-  type: string;
+  type: ValueType;
   element: "input" | "textarea" | "json" | "select" | "checkbox";
   options?: string[];
   value: string;
