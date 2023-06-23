@@ -64,8 +64,3 @@ export function Editor() {
 }
 
 export default Editor;
-
-export interface ExportDrawerProps {
-  opened: boolean;
-  onClose: () => void;
-}

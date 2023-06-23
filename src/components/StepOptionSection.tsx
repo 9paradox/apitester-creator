@@ -40,7 +40,7 @@ function StepOptionSection() {
     <Card shadow="none" withBorder radius="md" h="calc(100vh - 200px)" p="md">
       <Card.Section p="lg">
         <Group position="apart">
-          <Text fw={500}>Step Options - {selectedStep?.action}</Text>
+          <Text fw={500}>Step Options</Text>
         </Group>
       </Card.Section>
       <SegmentedControl

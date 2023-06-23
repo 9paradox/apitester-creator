@@ -7,8 +7,12 @@ import {
   Textarea,
   rem,
 } from "@mantine/core";
-import { ExportDrawerProps } from "./Editor";
 import { IconDownload } from "@tabler/icons-react";
+
+export interface ExportDrawerProps {
+  opened: boolean;
+  onClose: () => void;
+}
 
 function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
   return (
