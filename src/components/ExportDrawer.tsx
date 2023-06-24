@@ -34,7 +34,7 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
     setLoading(false);
     notifications.show({
       title: "Testcase exported successfully",
-      message: "Testcase '" + filename + ".json' exported successfully",
+      message: "Testcase '" + filename + ".test.json' exported successfully",
       color: "green",
       autoClose: 3000,
       icon: <IconDownload size={20} />,
@@ -51,7 +51,7 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
 
     const anchorElement = document.createElement("a");
     anchorElement.href = dataURL;
-    anchorElement.download = filename;
+    anchorElement.download = filename +".test.json";
 
     anchorElement.style.display = "none";
     document.body.appendChild(anchorElement);
