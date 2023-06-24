@@ -3,11 +3,11 @@ import {
   Header,
   Container,
   Group,
-  Text,
   ActionIcon,
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconBrandGithub, IconMoonStars, IconSun } from "@tabler/icons-react";
+import Logo from "./Logo";
 
 const useStyles = createStyles(() => ({
   header: {
@@ -24,9 +24,7 @@ export function AppHeader() {
   return (
     <Header height={60}>
       <Container className={classes.header}>
-        <Text c="cyan.5" fw={500} fz="xl">
-          apitester creator
-        </Text>
+        <Logo />
         <Group spacing={5} position="right">
           <ActionIcon
             component="a"
