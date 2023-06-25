@@ -11,6 +11,7 @@ import { notifications } from "@mantine/notifications";
 import { IconDownload } from "@tabler/icons-react";
 import { useSteps } from "../Store";
 import { useState } from "react";
+import { sendAnalytics } from "../Analytics";
 
 const tempFilename = "testcase-" + new Date().getTime();
 
@@ -40,6 +41,12 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
       icon: <IconDownload size={20} />,
       withBorder: true,
     });
+
+    sendAnalytics({
+      category: "Export",
+      action: "download testcase",
+    });
+
     onClose();
   }
 
@@ -51,7 +58,7 @@ function ExportDrawer({ opened, onClose }: ExportDrawerProps) {
 
     const anchorElement = document.createElement("a");
     anchorElement.href = dataURL;
-    anchorElement.download = filename +".test.json";
+    anchorElement.download = filename + ".test.json";
 
     anchorElement.style.display = "none";
     document.body.appendChild(anchorElement);

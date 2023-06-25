@@ -9,11 +9,16 @@ import Editor from "./components/Editor";
 import AppHeader from "./components/AppHeader";
 import { useState } from "react";
 import AppFooter from "./components/AppFooter";
+import { initAnalytics } from "./Analytics";
+
+initAnalytics(); //remove this line when you're done with analytics
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
-  const toggleColorScheme = (value?: ColorScheme) =>
+  const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  };
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}

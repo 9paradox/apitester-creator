@@ -6,8 +6,10 @@ import {
   ActionIcon,
   useMantineColorScheme,
 } from "@mantine/core";
+import ReactGA from "react-ga";
 import { IconBrandGithub, IconMoonStars, IconSun } from "@tabler/icons-react";
 import Logo from "./Logo";
+import { sendAnalytics } from "../Analytics";
 
 const useStyles = createStyles(() => ({
   header: {
@@ -21,6 +23,15 @@ const useStyles = createStyles(() => ({
 export function AppHeader() {
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  function handelColorScheme() {
+    toggleColorScheme();
+
+    sendAnalytics({
+      category: "UI",
+      action: "dark mode toggle",
+      label: colorScheme == "dark" ? "light" : "dark",
+    });
+  }
   return (
     <Header height={60}>
       <Container className={classes.header}>
@@ -30,12 +41,18 @@ export function AppHeader() {
             component="a"
             color="dark"
             size="lg"
-            href="https://github.com/9paradox/apitester-creator"
+            href="https://github.com/9paradox/apitester"
+            onClick={() => {
+              ReactGA.event({
+                category: "click",
+                action: "apitester github",
+              });
+            }}
           >
             <IconBrandGithub size={20} />
           </ActionIcon>
           <ActionIcon
-            onClick={() => toggleColorScheme()}
+            onClick={handelColorScheme}
             size="lg"
             sx={(theme) => ({
               backgroundColor:
