@@ -6,7 +6,6 @@ import {
   ActionIcon,
   useMantineColorScheme,
 } from "@mantine/core";
-import ReactGA from "react-ga";
 import { IconBrandGithub, IconMoonStars, IconSun } from "@tabler/icons-react";
 import Logo from "./Logo";
 import { sendAnalytics } from "../Analytics";
@@ -43,7 +42,7 @@ export function AppHeader() {
             size="lg"
             href="https://github.com/9paradox/apitester"
             onClick={() => {
-              ReactGA.event({
+              sendAnalytics({
                 category: "click",
                 action: "apitester github",
               });
